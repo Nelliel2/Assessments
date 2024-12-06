@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <div data-id="posts"></div>
+
+    <script>
+        // live-reload
+        {
+            const sse = new EventSource('/sse');
+            sse.addEventListener('message', ev => {
+                if (ev.data === 'reload') {
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+
+<header class="header">
+    <div class="header-content">
+        <div class="site-name">
+            <h2>Оценки</h2>
+        </div>
+        <nav class="menu">
+            <ul class="header-menu">
+                <li class="main-menu-element">
+                    <a href="#work-experience">Информация</a>
+                </li>
+                <li class="main-menu-element">
+                    <a href="#skillset">Регистрация</a>
+                </li>
+                <li>
+                    |
+                </li>
+                <li class="main-menu-element main-menu-element-enter">
+                    <a href="#photography">Войти</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<div class="assessments">
+    <div class="assessments-header">
+        <h1>Предмет</h1>
+    </div>
+
+    <div class="assessments-period-panel">
+        Период 
+        <label for="start-period">с</label>
+        <div class="input-date">
+            <input type="date" id="start-period" name="trip-start" value="2018-07-22" min="2000-01-01"/>
+        </div>
+        <label for="end-period">до</label>
+        <div class="input-date">
+            <input type="date" id="end-period" name="trip-end" value="2018-07-22" min="2000-01-01"/>
+        </div>
+    </div>
+
+    <div class="assessments-main-panel">
+        <div class="assessments-content">
+            <div class="assessments-content-element assessments-captions">Дата</div>
+            <div class="assessments-content-element assessments-captions" >Оценки</div>
+            <div class="assessments-content-element">
+                <div class="assessments-date"> 15.05.2002 </div>
+            </div>
+            <div class="assessments-content-element">
+                <div class="assessments-assessment"> 5 </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    
+    
+</div>
+
+</body>
+
+</html>

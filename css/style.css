@@ -1,0 +1,82 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html{
+    font-family: "Sen", sans-serif;
+    color: black;
+    height: 100%;
+    width: 100%;
+    font-size: 16px;
+}
+
+
+.header{
+    font-size: 1em;
+    background-color: black;
+    user-select: none;
+}
+.header-content{
+    width: 80vw;
+    margin: 0px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+.header-menu{
+    display: flex;
+    align-items: center;
+    list-style-type: none;
+    margin: 0;
+}
+.main-menu-element{
+    padding: 20px;
+}
+.main-menu-element:hover{
+    background-color: #609BFF;
+}
+a{
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+
+
+.assessments {
+    width: 80vw;
+    margin: 5vw auto;
+}
+.assessments-period-panel {
+    display: flex;
+    gap: 10px;
+    margin: 30px auto;
+}
+.assessments-main-panel{
+    width: 35vw;
+    margin: 30px 0px;
+}
+.assessments-content{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+}
+.assessments-content-element{
+    width: 40%;
+}
+.assessments-date {
+    width: min-content;
+    padding: 5px 10px;
+    background-color: #609BFF;
+    border-radius: 30px;
+}
+
+.assessments-assessment {
+    width: min-content;
+    padding: 5px 10px;
+    background-color: #609BFF;
+    border-radius: 30px;
+}
