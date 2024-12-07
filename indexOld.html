@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./asessments.js"></script>
+</head>
+
+<body>
+
+    <div data-id="posts"></div>
+    <script>
+        // live-reload
+        {
+            const sse = new EventSource('/sse');
+            sse.addEventListener('message', ev => {
+                if (ev.data === 'reload') {
+                    window.location.reload();
+                }
+            });
+        }
+        
+    </script>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="site-name">
+                <h2>Оценки</h2>
+            </div>
+            <nav class="menu">
+                <ul class="header-menu">
+                    <li class="main-menu-element">
+                        <a href="#work-experience">Информация</a>
+                    </li>
+                    <li class="main-menu-element">
+                        <a href="#skillset">Регистрация</a>
+                    </li>
+                    <li>
+                        |
+                    </li>
+                    <li class="main-menu-element main-menu-element-enter">
+                        <a href="#photography">Войти</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="assessments">
+        <div class="assessments-header">
+            <h1 id="curr-subject">Предмет</h1>
+        </div>
+
+        <div class="assessments-main-panel">
+            <div class="assessments-left-panel">
+                <div class="assessments-period-panel">
+                    <label for="start-period">Период с</label>
+                    <input type="date" id="start-period" name="trip-start" value="2018-07-22" min="2000-01-01"
+                        class="input-date" />
+
+                    <label for="end-period">до</label>
+                    <input type="date" id="end-period" name="trip-end" value="2018-07-22" min="2000-01-01"
+                        class="input-date" />
+
+                    <div class="assessment-button button-update-assessment-table">
+                        <span id="button-update-assessment-table" onclick="updateAssessmentTable()">Показать</span>
+
+                    </div>
+                </div>
+
+                <div class="assessments-assessment-panel">
+                    <div class="assessments-content">
+                        <div class="assessments-content-element assessments-captions">Дата</div>
+                        <div class="assessments-content-element assessments-captions">Оценки</div>
+                    </div>
+                    <div class="assessments-content" id="assessments-content">
+
+                    </div>
+                </div>
+            </div>
+            <div class="assessments-right-panel">
+                <div class="assesment-filter">
+                    <label for="group-name-choice">Группа</label>
+                    <select name="group" id="group-name-choice" class="select-box">
+                    </select>
+                </div>
+                <div class="assesment-filter">
+                    <label for="student-name-choice">Студент</label>
+                    <select name="student" id="student-name-choice" class="select-box">
+                    </select>
+                </div>
+                <div class="assesment-filter">
+                    <label for="start-period">Дата оценки</label>
+                    <input type="date" id="asessment-date" name="trip-date" value="2018-07-22" min="2000-01-01"
+                        class="input-date" />
+                </div>
+                <div class="assesment-filter">
+                    <label for="asessments-choice">Добавить оценку</label>
+                    <ul id="asessments-choice" class="asessments-choice">
+                        <li class="assessments-assessment assessment-button assessment-five"
+                            onclick="newAssessment(5, false, 'assessment-five')">5</li>
+                        <li class="assessments-assessment assessment-button assessment-four"
+                            onclick="newAssessment(4, false, 'assessment-four')">4</li>
+                        <li class="assessments-assessment assessment-button assessment-three"
+                            onclick="newAssessment(3, false, 'assessment-three')">3</li>
+                        <li class="assessments-assessment assessment-button assessment-two"
+                            onclick="newAssessment(2, false, 'assessment-two')">2</li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+
+</html>
