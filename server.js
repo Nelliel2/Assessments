@@ -2,13 +2,18 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import {sequelize} from './db_connection.js';
 import {Student} from './models/student.js';
+
 import path from 'path';
 
 const app = express();
 const port = 3000;
 
 
+
 const __dirname = path.resolve(); // Получение текущего пути
+
+app.use(express.static(path.join(__dirname, 'controllers')));
+
  // Отдаём HTML-файл по запросу
  app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'index.html')); // Путь к файлу
@@ -29,9 +34,9 @@ app.get('/students', async (req, res) => {
 
 // API для добавления нового студента
 app.post('/students', async (req, res) => {
-  const { Name, Grade } = req.body;
+  const { Name, Surname } = req.body;
   try {
-    const student = await Student.create({ Name, Grade });
+    const student = await Student.create({ Name, Surname });
     res.status(201).json(student);
   } catch (err) {
     res.status(500).send(err.message);
@@ -41,14 +46,14 @@ app.post('/students', async (req, res) => {
 // API для обновления данных студента
 app.put('/students/:id', async (req, res) => {
   const { id } = req.params;
-  const { Name, Grade } = req.body;
+  const { Name, Surname } = req.body;
   try {
     const student = await Student.findByPk(id);
     if (!student) {
       return res.status(404).send('Student not found');
     }
     student.Name = Name;
-    student.Grade = Grade;
+    student.Surname = Surname;
     await student.save();
     res.status(200).json(student);
   } catch (err) {
