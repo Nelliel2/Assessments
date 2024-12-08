@@ -16,107 +16,7 @@
       padding: 0;
     }
   </style>
-  <script>
-    // Функция для получения списка студентов
-    async function fetchStudents() {
-      try {
-        const response = await fetch('http://localhost:3000/students');
-        if (!response.ok) {
-          throw new Error('Failed to fetch students');
-        }
-        const students = await response.json();
-        const list = document.getElementById('student-list');
-        list.innerHTML = '';  // Очищаем список
-        students.forEach(student => {
-          const li = document.createElement('li');
-          li.textContent = `${student.Name}: ${student.Grade}`;
-          list.appendChild(li);
-        });
-      } catch (err) {
-        console.error(err);
-        alert('Error fetching students');
-      }
-    }
-
-    // Функция для добавления нового студента
-    async function addStudent() {
-      const Name = document.getElementById('Name').value;
-      const Grade = parseFloat(document.getElementById('Grade').value);
-      if (!Name || isNaN(Grade)) {
-        alert('Please provide both Name and Grade');
-        return;
-      }
-
-      try {
-        const response = await fetch('http://localhost:3000/students', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ Name, Grade })
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to add student');
-        }
-
-        fetchStudents();  // Обновляем список студентов
-      } catch (err) {
-        console.error(err);
-        alert('Error adding student');
-      }
-    }
-
-    // Функция для удаления студента
-    async function deleteStudent(id) {
-      try {
-        const response = await fetch(`http://localhost:3000/students/${id}`, {
-          method: 'DELETE',
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to delete student');
-        }
-
-        fetchStudents();  // Обновляем список студентов
-      } catch (err) {
-        console.error(err);
-        alert('Error deleting student');
-      }
-    }
-
-    // Функция для обновления данных студента
-    async function updateStudent(id) {
-      const Name = prompt("Enter new Name:");
-      const Grade = parseFloat(prompt("Enter new Grade:"));
-      if (!Name || isNaN(Grade)) {
-        alert('Please provide valid Name and Grade');
-        return;
-      }
-
-      try {
-        const response = await fetch(`http://localhost:3000/students/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ Name, Grade })
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to update student');
-        }
-
-        fetchStudents();  // Обновляем список студентов
-      } catch (err) {
-        console.error(err);
-        alert('Error updating student');
-      }
-    }
-
-    // Загружаем список студентов при загрузке страницы
-    window.onload = fetchStudents;
-  </script>
+  <script src="/studentController.js"></script>
 </head>
 <body>
   <h1>Student Grading System</h1>
@@ -125,8 +25,8 @@
     <h2>Add New Student</h2>
     <label for="Name">Name:</label>
     <input type="text" id="Name" required>
-    <label for="Grade">Grade:</label>
-    <input type="number" id="Grade" required>
+    <label for="Surname">Surname:</label>
+    <input type="text" id="Surname" required>
     <button onclick="addStudent()">Add Student</button>
   </div>
 

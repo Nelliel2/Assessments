@@ -1,16 +1,23 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import {sequelize} from '../db_connection.js';
+import {Assessment} from './assessment.js';
 
-//const sequelize = new Sequelize('sqlite::memory:')
-const Student = sequelize.define('Subject', {
+const Student = sequelize.define('Student', {
   Name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  Grade: {
-    type: DataTypes.INTEGER,
+  Surname: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
+  Patronymic: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 });
+
+Student.hasMany(Assessment);
+
 
 export { Student };
