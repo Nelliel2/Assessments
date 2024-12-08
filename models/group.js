@@ -1,16 +1,16 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import {sequelize} from '../db_connection.js';
-import {Assessment} from './assessment.js';
 import {StudyPlan} from './studyPlan.js';
+import {StudentsGroup} from './studentsGroup.js';
 
-const Subject = sequelize.define('Subject', {
+const Group = sequelize.define('Group', {
   Name: {
     type: DataTypes.STRING,
     allowNull: false
   }
 });
-Subject.hasMany(Assessment);
-Subject.hasMany(StudyPlan);
+Group.hasMany(StudyPlan);
+Group.hasMany(StudentsGroup);
 
-export { Subject };
+export { Group };
 

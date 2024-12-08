@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site</title>
-    <link rel="stylesheet" href="./css/style.css">
-    <script src="./asessments.js"></script>
+    <link rel="stylesheet" href="/style.css">
+
+    <script src="/studentController.js" type="module"></script>
 </head>
 
 <body>
@@ -99,14 +100,10 @@
                 <div class="assesment-filter">
                     <label for="asessments-choice">Добавить оценку</label>
                     <ul id="asessments-choice" class="asessments-choice">
-                        <li class="assessments-assessment assessment-button assessment-five"
-                            onclick="newAssessment(5, false, 'assessment-five')">5</li>
-                        <li class="assessments-assessment assessment-button assessment-four"
-                            onclick="newAssessment(4, false, 'assessment-four')">4</li>
-                        <li class="assessments-assessment assessment-button assessment-three"
-                            onclick="newAssessment(3, false, 'assessment-three')">3</li>
-                        <li class="assessments-assessment assessment-button assessment-two"
-                            onclick="newAssessment(2, false, 'assessment-two')">2</li>
+                        <li id="assessment-five" class="assessments-assessment assessment-button assessment-five">5</li>
+                        <li id="assessment-four" class="assessments-assessment assessment-button assessment-four">4</li>
+                        <li id="assessment-three" class="assessments-assessment assessment-button assessment-three">3</li>
+                        <li id="assessment-two" class="assessments-assessment assessment-button assessment-two">2</li>
                     </ul>
                 </div>
             </div>
@@ -114,6 +111,7 @@
 
         </div>
     </div>
+    <script src="/asessments.js"  type="module"></script>
 </body>
 
 </html>

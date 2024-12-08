@@ -13,10 +13,12 @@ const port = 3000;
 const __dirname = path.resolve(); // Получение текущего пути
 
 app.use(express.static(path.join(__dirname, 'controllers')));
+app.use(express.static(path.join(__dirname, 'scripts')));
+app.use(express.static(path.join(__dirname, 'css')));
 
  // Отдаём HTML-файл по запросу
  app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html')); // Путь к файлу
+  res.sendFile(path.join(__dirname, 'views', 'indexOld.html')); // Путь к файлу
 });
 
 
@@ -75,6 +77,26 @@ app.delete('/students/:id', async (req, res) => {
     res.status(500).send(err.message);
   }
 });
+
+// SSE маршрут
+app.get('/sse', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
+  // Отправка данных каждую секунду
+  const intervalId = setInterval(() => {
+      const data = JSON.stringify({ message: 'Hello from server!', timestamp: new Date() });
+      res.write(`data: ${data}\n\n`);
+  }, 1000);
+
+  // Очистка интервала при закрытии соединения
+  req.on('close', () => {
+      clearInterval(intervalId);
+      res.end();
+  });
+});
+
 
 // Запуск сервера
 app.listen(port, async () => {

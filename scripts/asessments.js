@@ -1,7 +1,9 @@
 'use strict';
+//import studentController from '../controllers/studentController.js';
+import studentController from '/studentController.js';
 
 
-document.addEventListener("DOMContentLoaded", ready);
+
 
 function ready() {
     let currDate = new Date();
@@ -95,3 +97,19 @@ function newAssessment(assessment, asessmentDate, assessmentClassName) {
     assessmentsList.appendChild(assessmentElementDiv);
 
 }
+
+document.addEventListener("DOMContentLoaded", ready);
+
+document.addEventListener('DOMContentLoaded', () => {
+    const buttonFive = document.getElementById('assessment-five');
+    buttonFive.addEventListener('click',  () => newAssessment(5, false, 'assessment-five'));
+
+    const buttonFour = document.getElementById('assessment-four');
+    buttonFour.addEventListener('click',  () => newAssessment(4, false, 'assessment-four'));
+
+    const buttonThree = document.getElementById('assessment-three');
+    buttonThree.addEventListener('click',  () => newAssessment(3, false, 'assessment-three'));
+
+    const buttonTwo = document.getElementById('assessment-two');
+    buttonTwo.addEventListener('click',  () => newAssessment(2, false, 'assessment-two'));
+});

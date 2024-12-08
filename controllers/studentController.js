@@ -97,4 +97,11 @@ async function updateStudent(id) {
 }
 
 // Загружаем список студентов при загрузке страницы
-window.onload = fetchStudents;
+//window.onload = fetchStudents;
+
+export default {
+    updateStudent,
+    deleteStudent,
+    addStudent,
+    fetchStudents,
+};
