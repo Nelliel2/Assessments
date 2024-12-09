@@ -5,26 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site</title>
-    <link rel="stylesheet" href="/style.css">
-
-    <script src="/studentController.js" type="module"></script>
+    <link rel="stylesheet" href="./css/style.css">
+    <!-- <script src="/studentController.js" type="module"></script> -->
+    <!-- <script src="/asessments.js"  type="module"></script> -->
 </head>
 
 <body>
-
     <div data-id="posts"></div>
-    <script>
-        // live-reload
-        {
-            const sse = new EventSource('/sse');
-            sse.addEventListener('message', ev => {
-                if (ev.data === 'reload') {
-                    window.location.reload();
-                }
-            });
-        }
-        
-    </script>
 
     <header class="header">
         <div class="header-content">
@@ -34,16 +21,16 @@
             <nav class="menu">
                 <ul class="header-menu">
                     <li class="main-menu-element">
-                        <a href="#work-experience">Информация</a>
+                        <a href="index.html">Информация</a>
                     </li>
                     <li class="main-menu-element">
-                        <a href="#skillset">Регистрация</a>
+                        <a href="registration.html">Регистрация</a>
                     </li>
                     <li>
                         |
                     </li>
                     <li class="main-menu-element main-menu-element-enter">
-                        <a href="#photography">Войти</a>
+                        <a href="enter.html">Войти</a>
                     </li>
                 </ul>
             </nav>
@@ -111,7 +98,6 @@
 
         </div>
     </div>
-    <script src="/asessments.js"  type="module"></script>
 </body>
 
 </html>
