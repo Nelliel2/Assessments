@@ -1,11 +1,13 @@
 'use strict';
 //import studentController from '../controllers/studentController.js';
 import studentController from '/studentController.js';
+import subjectController from '/subjectController.js';
+import groupController from '/groupController.js';
 
 
 
 
-function ready() {
+async function ready() {
     let currDate = new Date();
     let assessmentsDate = document.getElementById("asessment-date");
     console.dir(assessmentsDate);
@@ -31,8 +33,12 @@ function ready() {
 
     updateAssessmentTable();
 
-    updateSelectBox("student-name-choice", ["Олег Иксанов", "Артём Костюк", "Смирнова Анна"]);
-    updateSelectBox("group-name-choice", ["ПО-21", "ПО-22", "ПО-23"]);
+    let studentsList = await studentController.getStudentsList();
+    let subjectsList = await subjectController.getSubjectsList();
+    let groupList = await groupController.getGroupsList();
+    
+    updateSelectBox("student-name-choice", studentsList);
+    updateSelectBox("group-name-choice", groupList);
 }
 
 function updateSelectBox(id, options) {

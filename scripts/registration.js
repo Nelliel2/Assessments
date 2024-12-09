@@ -4,8 +4,8 @@ const regButton = document.getElementById("registration-button");
 
 const check = (input) => {
   // Handle cases where input is too vague
-  if (input.value == passwordInput.value) {
-    input.setCustomValidity(`"${input.value}" is not a feeling.`);
+  if (input.value !== passwordInput.value) {
+    input.setCustomValidity(`"Пароли не совпадают.`);
   } else {
     // An empty string resets the custom validity state
     input.setCustomValidity("");
@@ -20,7 +20,7 @@ const validateInput = () => {
   passwordRepeadInput.reportValidity();
 
   let css = document.createElement('style');
-  css.textContent = 'input:hover { color: red; }'; 
+  css.textContent = 'input:invalid, select:invalid { border: rgb(221, 24, 24) solid 1px; }'; 
   document.head.appendChild(css);
   
   if (passwordRepeadInput.validity.customError) {

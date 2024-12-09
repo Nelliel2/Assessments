@@ -11,7 +11,7 @@ async function fetchStudents() {
         list.innerHTML = '';  // Очищаем список
         students.forEach(student => {
             const li = document.createElement('li');
-            li.textContent = `${student.Name}: ${student.Surname}`;
+            li.textContent = `${student.Name} ${student.Surname} ${student.Patronymic}`;
             list.appendChild(li);
         });
     } catch (err) {
@@ -19,6 +19,28 @@ async function fetchStudents() {
         alert('Error fetching students');
     }
 }
+
+// Функция для получения массива студентов
+async function getStudentsList() {
+
+    try {
+        const response = await fetch('http://localhost:3000/students');
+        if (!response.ok) {
+            throw new Error('Failed to fetch students');
+        }
+        const students = await response.json();
+        let arr = []
+        students.forEach(student => {
+            arr.push(`${student.Name} ${student.Surname} ${student.Patronymic || ''}`);
+        });
+        return arr;
+    } catch (err) {
+        console.error(err);
+        alert('Error fetching students');
+    }
+}
+
+
 
 // Функция для добавления нового студента
 async function addStudent() {
@@ -104,4 +126,5 @@ export default {
     deleteStudent,
     addStudent,
     fetchStudents,
+    getStudentsList
 };

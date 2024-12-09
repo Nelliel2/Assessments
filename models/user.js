@@ -2,7 +2,7 @@ import { Sequelize, DataTypes } from 'sequelize';
 import {sequelize} from '../db_connection.js';
 
 const User = sequelize.define('User', {
-  Login: {
+  Email: {
     type: DataTypes.STRING,
     allowNull: false,
   },

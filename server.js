@@ -2,6 +2,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import {sequelize} from './db_connection.js';
 import {Student} from './models/student.js';
+import {Subject} from './models/subject.js'; 
+import {Group} from './models/group.js'; 
 
 import path from 'path';
 
@@ -37,9 +39,9 @@ app.get('/students', async (req, res) => {
 
 // API для добавления нового студента
 app.post('/students', async (req, res) => {
-  const { Name, Surname } = req.body;
+  const { Name, Surname, Patronymic } = req.body;
   try {
-    const student = await Student.create({ Name, Surname });
+    const student = await Student.create({ Name, Surname, Patronymic });
     res.status(201).json(student);
   } catch (err) {
     res.status(500).send(err.message);
@@ -49,7 +51,7 @@ app.post('/students', async (req, res) => {
 // API для обновления данных студента
 app.put('/students/:id', async (req, res) => {
   const { id } = req.params;
-  const { Name, Surname } = req.body;
+  const { Name, Surname, Patronymic } = req.body;
   try {
     const student = await Student.findByPk(id);
     if (!student) {
@@ -57,6 +59,7 @@ app.put('/students/:id', async (req, res) => {
     }
     student.Name = Name;
     student.Surname = Surname;
+    student.Patronymic = Patronymic;
     await student.save();
     res.status(200).json(student);
   } catch (err) {
@@ -78,6 +81,117 @@ app.delete('/students/:id', async (req, res) => {
     res.status(500).send(err.message);
   }
 });
+
+
+// API для получения списка предметов
+app.get('/subjects', async (req, res) => {
+  try {
+    const subjects = await Subject.findAll();
+    res.json(subjects);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// API для добавления нового предмета
+app.post('/subjects', async (req, res) => {
+  const { Name } = req.body;
+  try {
+    const subject = await Subject.create({ Name });
+    res.status(201).json(subject);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// API для обновления данных предмета
+app.put('/subjects/:id', async (req, res) => {
+  const { id } = req.params;
+  const { Name } = req.body;
+  try {
+    const subject = await Subject.findByPk(id);
+    if (!subject) {
+      return res.status(404).send('Subject not found');
+    }
+    subject.Name = Name;
+    await subject.save();
+    res.status(200).json(subject);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// API для удаления предмета
+app.delete('/subjects/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const subject = await Subject.findByPk(id);
+    if (!subject) {
+      return res.status(404).send('Subject not found');
+    }
+    await subject.destroy();
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+
+
+// API для получения списка предметов
+app.get('/groups', async (req, res) => {
+  try {
+    const groups = await Group.findAll();
+    res.json(groups);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// API для добавления нового предмета
+app.post('/groups', async (req, res) => {
+  const { Name } = req.body;
+  try {
+    const group = await Group.create({ Name });
+    res.status(201).json(group);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// API для обновления данных предмета
+app.put('/groups/:id', async (req, res) => {
+  const { id } = req.params;
+  const { Name } = req.body;
+  try {
+    const group = await Group.findByPk(id);
+    if (!group) {
+      return res.status(404).send('Group not found');
+    }
+    group.Name = Name;
+    await group.save();
+    res.status(200).json(group);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// API для удаления предмета
+app.delete('/groups/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const group = await Group.findByPk(id);
+    if (!group) {
+      return res.status(404).send('Group not found');
+    }
+    await group.destroy();
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+app.use(express.json()); // Для парсинга JSON-тел запросов
 
 // SSE маршрут
 app.get('/sse', (req, res) => {
