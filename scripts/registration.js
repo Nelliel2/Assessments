@@ -18,6 +18,11 @@ passwordRepeadInput.addEventListener("input", () => {
 
 const validateInput = () => {
   passwordRepeadInput.reportValidity();
+
+  let css = document.createElement('style');
+  css.textContent = 'input:hover { color: red; }'; 
+  document.head.appendChild(css);
+  
   if (passwordRepeadInput.validity.customError) {
     // We can handle custom validity states here
   } else {
