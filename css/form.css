@@ -44,9 +44,10 @@ select {
   font-size: 1em;
 }
 
-input:invalid {
-  border: red solid 3px;
+label {
+  overflow: hidden;
 }
+
 
 select:invalid {
   color: #757575;

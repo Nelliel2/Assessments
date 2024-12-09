@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Grading System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    input, button {
+      margin: 5px;
+    }
+    #student-list {
+      list-style: none;
+      padding: 0;
+    }
+  </style>
+  <script src="/studentController.js" type="module"></script>
+</head>
+<body>
+  <h1>Student Grading System</h1>
+  
+  <div>
+    <h2>Add New Student</h2>
+    <label for="Name">Name:</label>
+    <input type="text" id="Name" required>
+    <label for="Surname">Surname:</label>
+    <input type="text" id="Surname" required>
+    <button onclick="addStudent()">Add Student</button>
+  </div>
+
+  <h2>Student List</h2>
+  <ul id="student-list">
+    <!-- Студенты будут отображаться здесь -->
+  </ul>
+
+  <h2>Actions</h2>
+  <div>
+    <!-- Пример добавления действий для обновления/удаления -->
+    <!-- Действия будут добавляться динамически из данных студентов -->
+  </div>
+</body>
+</html>

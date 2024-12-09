@@ -1,44 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Student Grading System</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    input, button {
-      margin: 5px;
-    }
-    #student-list {
-      list-style: none;
-      padding: 0;
-    }
-  </style>
-  <script src="/studentController.js" type="module"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/studentController.js" type="module"></script>
+    <script src="/asessments.js"  type="module"></script>
 </head>
+
 <body>
-  <h1>Student Grading System</h1>
-  
-  <div>
-    <h2>Add New Student</h2>
-    <label for="Name">Name:</label>
-    <input type="text" id="Name" required>
-    <label for="Surname">Surname:</label>
-    <input type="text" id="Surname" required>
-    <button onclick="addStudent()">Add Student</button>
-  </div>
+    <div data-id="posts"></div>
 
-  <h2>Student List</h2>
-  <ul id="student-list">
-    <!-- Студенты будут отображаться здесь -->
-  </ul>
+    <header class="header">
+        <div class="header-content">
+            <div class="site-name">
+                <h2>Оценки</h2>
+            </div>
+            <nav class="menu">
+                <ul class="header-menu">
+                    <li class="main-menu-element">
+                        <a href="index.html">Информация</a>
+                    </li>
+                    <li class="main-menu-element">
+                        <a href="registration.html">Регистрация</a>
+                    </li>
+                    <li>
+                        |
+                    </li>
+                    <li class="main-menu-element main-menu-element-enter">
+                        <a href="enter.html">Войти</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="assessments">
+        <div class="assessments-header">
+            <h1 id="curr-subject">Предмет</h1>
+        </div>
 
-  <h2>Actions</h2>
-  <div>
-    <!-- Пример добавления действий для обновления/удаления -->
-    <!-- Действия будут добавляться динамически из данных студентов -->
-  </div>
+        <div class="assessments-main-panel">
+            <div class="assessments-left-panel">
+                <div class="assessments-period-panel">
+                    <label for="start-period">Период с</label>
+                    <input type="date" id="start-period" name="trip-start" value="2018-07-22" min="2000-01-01"
+                        class="input-date" />
+
+                    <label for="end-period">до</label>
+                    <input type="date" id="end-period" name="trip-end" value="2018-07-22" min="2000-01-01"
+                        class="input-date" />
+
+                    <div class="assessment-button button-update-assessment-table">
+                        <span id="button-update-assessment-table" onclick="updateAssessmentTable()">Показать</span>
+
+                    </div>
+                </div>
+
+                <div class="assessments-assessment-panel">
+                    <div class="assessments-content">
+                        <div class="assessments-content-element assessments-captions">Дата</div>
+                        <div class="assessments-content-element assessments-captions">Оценки</div>
+                    </div>
+                    <div class="assessments-content" id="assessments-content">
+
+                    </div>
+                </div>
+            </div>
+            <div class="assessments-right-panel">
+                <div class="assesment-filter">
+                    <label for="group-name-choice">Группа</label>
+                    <select name="group" id="group-name-choice" class="select-box">
+                    </select>
+                </div>
+                <div class="assesment-filter">
+                    <label for="student-name-choice">Студент</label>
+                    <select name="student" id="student-name-choice" class="select-box">
+                    </select>
+                </div>
+                <div class="assesment-filter">
+                    <label for="start-period">Дата оценки</label>
+                    <input type="date" id="asessment-date" name="trip-date" value="2018-07-22" min="2000-01-01"
+                        class="input-date" />
+                </div>
+                <div class="assesment-filter">
+                    <label for="asessments-choice">Добавить оценку</label>
+                    <ul id="asessments-choice" class="asessments-choice">
+                        <li id="assessment-five" class="assessments-assessment assessment-button assessment-five">5</li>
+                        <li id="assessment-four" class="assessments-assessment assessment-button assessment-four">4</li>
+                        <li id="assessment-three" class="assessments-assessment assessment-button assessment-three">3</li>
+                        <li id="assessment-two" class="assessments-assessment assessment-button assessment-two">2</li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
 </body>
+
 </html>

@@ -15,10 +15,11 @@ const __dirname = path.resolve(); // Получение текущего пут�
 app.use(express.static(path.join(__dirname, 'controllers')));
 app.use(express.static(path.join(__dirname, 'scripts')));
 app.use(express.static(path.join(__dirname, 'css')));
+app.use(express.static(path.join(__dirname, 'views')));
 
  // Отдаём HTML-файл по запросу
  app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'indexOld.html')); // Путь к файлу
+  res.sendFile(path.join(__dirname, 'views', 'index.html')); // Путь к файлу
 });
 
 

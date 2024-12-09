@@ -11,6 +11,20 @@ html{
     font-size: 1em;
 }
 
+input,
+select {
+  width: 100%;
+  padding: 5px;
+  margin: 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+  font-size: 1em;
+}
+
+
+
+
 
 .header{
     font-size: 1em;
@@ -54,6 +68,8 @@ a{
 }
 .assessments-period-panel {
     display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
     align-items: center;
     gap: 10px;
     margin: 30px auto;
@@ -161,4 +177,8 @@ a{
 }
 .assessment-five{
     background-color: #27AE60;
+}
+
+button:hover{
+    background-color: black;
 }
