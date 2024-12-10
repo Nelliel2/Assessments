@@ -178,3 +178,14 @@ button:hover{
     background-color: #27AE60;
 }
 
+#subject-name-choice {
+    font-size: 2em;
+    font-weight: bold;
+    width: max-content;
+    appearance: none; 
+    background: url('./arrow1.svg') no-repeat left; 
+    background-size: 25px;
+    padding: 0px 25px 4px 35px;
+}
+
+
