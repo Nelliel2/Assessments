@@ -3,11 +3,9 @@ const passwordRepeadInput = document.getElementById("Password-repead");
 const regButton = document.getElementById("registration-button");
 
 const check = (input) => {
-  // Handle cases where input is too vague
   if (input.value !== passwordInput.value) {
-    input.setCustomValidity(`"Пароли не совпадают.`);
+    input.setCustomValidity(`Пароли не совпадают.`);
   } else {
-    // An empty string resets the custom validity state
     input.setCustomValidity("");
   }
 };

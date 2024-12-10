@@ -6,34 +6,14 @@ async function fetchGroups() {
             throw new Error('Failed to fetch groups');
         }
         const groups = await response.json();
-        const list = document.getElementById('group-list');
-        list.innerHTML = '';  // Очищаем список
+        const select = document.getElementById('group-name-choice');
+        select.innerHTML = '';  // Очищаем список
         groups.forEach(group => {
-            const li = document.createElement('li');
-            li.textContent = group.Name;
-            list.appendChild(li);
+            const option = document.createElement('option');
+            option.innerHTML = group.Name;
+            option.value = group.id;
+            select.appendChild(option);
         });
-    } catch (err) {
-        console.error(err);
-        alert('Error fetching groups');
-    }
-}
-
-
-// Функция для получения массива студентов
-async function getGroupsList() {
-
-    try {
-        const response = await fetch('http://localhost:3000/groups');
-        if (!response.ok) {
-            throw new Error('Failed to fetch groups');
-        }
-        const groups = await response.json();
-        let arr = []
-        groups.forEach(group => {
-            arr.push(`${group.Name}`);
-        });
-        return arr;
     } catch (err) {
         console.error(err);
         alert('Error fetching groups');
@@ -115,12 +95,11 @@ async function updateGroup(id) {
 }
 
 // Загружаем список предметов при загрузке страницы
-// window.onload = fetchGroups;
+//window.onload = fetchGroups;
 
 export default {
     updateGroup,
     deleteGroup,
     addGroup,
-    fetchGroups,
-    getGroupsList
+    fetchGroups
 };

@@ -4,12 +4,13 @@ import {sequelize} from './db_connection.js';
 import {Student} from './models/student.js';
 import {Subject} from './models/subject.js'; 
 import {Group} from './models/group.js'; 
+import {Assessment} from './models/assessment.js'; 
+
 
 import path from 'path';
 
 const app = express();
 const port = 3000;
-
 
 
 const __dirname = path.resolve(); // Получение текущего пути
@@ -18,14 +19,17 @@ app.use(express.static(path.join(__dirname, 'controllers')));
 app.use(express.static(path.join(__dirname, 'scripts')));
 app.use(express.static(path.join(__dirname, 'css')));
 app.use(express.static(path.join(__dirname, 'views')));
+app.use(express.static(path.join(__dirname, 'modules')));
+app.use(express.static(path.join(__dirname, 'img')));
 
  // Отдаём HTML-файл по запросу
- app.get('/', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'index.html')); // Путь к файлу
 });
 
-
 app.use(bodyParser.json());
+
+
 
 // API для получения списка студентов
 app.get('/students', async (req, res) => {
@@ -79,6 +83,31 @@ app.delete('/students/:id', async (req, res) => {
     res.status(204).send();
   } catch (err) {
     res.status(500).send(err.message);
+  }
+});
+
+
+// Функция для получения студентов из конкретной группы
+async function fetchStudentsByGroup(GroupId) {
+  try {
+      const students = await Student.findAll({
+          where: { GroupId: GroupId }, // Фильтрация по GroupId
+      });
+      return students;
+  } catch (error) {
+      console.error('Error fetching students:', error);
+      throw error; // Пробрасываем ошибку дальше
+  }
+}
+
+app.get('/students/group/:GroupId', async (req, res) => {
+  const GroupId = req.params.GroupId;
+
+  try {
+      const students = await fetchStudentsByGroup(GroupId);
+      res.json(students);
+  } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch students' });
   }
 });
 
@@ -190,6 +219,110 @@ app.delete('/groups/:id', async (req, res) => {
     res.status(500).send(err.message);
   }
 });
+
+
+// Получить все оценки
+app.get('/assessments', async (req, res) => {
+  try {
+    const assessments = await Assessment.findAll({
+      include: [
+        { model: Student, attributes: ['id', 'Name', 'Surname'] },
+        { model: Subject, attributes: ['id', 'Name'] }
+      ]
+    });
+    res.json(assessments);
+  } catch (error) {
+    console.error('Error fetching assessments:', error);
+    res.status(500).json({ message: 'Failed to fetch assessments' });
+  }
+});
+
+// Получить оценку по ID
+app.get('/assessments/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const assessment = await Assessment.findByPk(id, {
+      include: [
+        { model: Student },
+        { model: Subject }
+      ]
+    });
+    if (!assessment) {
+      return res.status(404).json({ message: 'Assessment not found' });
+    }
+    res.json(assessment);
+  } catch (error) {
+    console.error('Error fetching assessment:', error);
+    res.status(500).json({ message: 'Failed to fetch assessment' });
+  }
+});
+
+// Создать новую оценку
+app.post('/assessments', async (req, res) => {
+  const { Assessment: assessmentValue, Date, studentId, subjectId } = req.body;
+  try {
+    const newAssessment = await Assessment.create({
+      Assessment: assessmentValue,
+      Date,
+      studentId,
+      subjectId
+    });
+    res.status(201).json(newAssessment);
+  } catch (error) {
+    console.error('Error creating assessment:', error);
+    res.status(500).json({ message: 'Failed to create assessment' });
+  }
+});
+
+// Обновить оценку
+app.put('/assessments/:id', async (req, res) => {
+  const { id } = req.params;
+  const { Assessment: assessmentValue, Date } = req.body;
+  try {
+    const assessment = await Assessment.findByPk(id);
+    if (!assessment) {
+      return res.status(404).json({ message: 'Assessment not found' });
+    }
+    assessment.Assessment = assessmentValue;
+    assessment.Date = Date;
+    await assessment.save();
+    res.json(assessment);
+  } catch (error) {
+    console.error('Error updating assessment:', error);
+    res.status(500).json({ message: 'Failed to update assessment' });
+  }
+});
+
+// Удалить оценку
+app.delete('/assessments/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const assessment = await Assessment.findByPk(id);
+    if (!assessment) {
+      return res.status(404).json({ message: 'Assessment not found' });
+    }
+    await assessment.destroy();
+    res.status(204).send(); // Успешное удаление без контента
+  } catch (error) {
+    console.error('Error deleting assessment:', error);
+    res.status(500).json({ message: 'Failed to delete assessment' });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.use(express.json()); // Для парсинга JSON-тел запросов
 

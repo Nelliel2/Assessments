@@ -1,37 +1,40 @@
+
+
 // Функция для получения списка студентов
 async function fetchStudents() {
-
     try {
-        const response = await fetch('http://localhost:3000/students');
+        const response = await fetch('http://localhost:3000/api/students'); // Добавлен префикс /api
         if (!response.ok) {
             throw new Error('Failed to fetch students');
         }
         const students = await response.json();
-        const list = document.getElementById('student-list');
-        list.innerHTML = '';  // Очищаем список
+
+        const select = document.getElementById('student-name-choice');
+        select.innerHTML = '';  // Очищаем список
         students.forEach(student => {
-            const li = document.createElement('li');
-            li.textContent = `${student.Name} ${student.Surname} ${student.Patronymic}`;
-            list.appendChild(li);
+            const option = document.createElement('option');
+            option.innerHTML = `${student.Name} ${student.Surname} ${student.Patronymic || ''}`;
+            option.value = student.id;
+            select.appendChild(option);
         });
+
     } catch (err) {
         console.error(err);
-        alert('Error fetching students');
     }
 }
 
+
 // Функция для получения массива студентов
 async function getStudentsList() {
-
     try {
-        const response = await fetch('http://localhost:3000/students');
+        const response = await fetch('http://localhost:3000/api/students'); // Добавлен префикс /api
         if (!response.ok) {
             throw new Error('Failed to fetch students');
         }
         const students = await response.json();
-        let arr = []
+        let arr = [];
         students.forEach(student => {
-            arr.push(`${student.Name} ${student.Surname} ${student.Patronymic || ''}`);
+            arr.push(`${student.Name} ${student.Surname} ${student.Patronymic || ''}`); // Исправлен синтаксис шаблонной строки
         });
         return arr;
     } catch (err) {
@@ -40,24 +43,23 @@ async function getStudentsList() {
     }
 }
 
-
-
 // Функция для добавления нового студента
 async function addStudent() {
     const Name = document.getElementById('Name').value;
     const Surname = document.getElementById('Surname').value;
-    if (!Name || !(Surname)) {
+    const Patronymic = document.getElementById('Patronymic').value; // Добавлено поле Patronymic
+    if (!Name || !Surname) {
         alert('Please provide both Name and Surname');
         return;
     }
 
     try {
-        const response = await fetch('http://localhost:3000/students', {
+        const response = await fetch('http://localhost:3000/api/students', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ Name, Surname })
+            body: JSON.stringify({ Name, Surname, Patronymic }) // Добавлено поле Patronymic
         });
 
         if (!response.ok) {
@@ -74,7 +76,7 @@ async function addStudent() {
 // Функция для удаления студента
 async function deleteStudent(id) {
     try {
-        const response = await fetch(`http://localhost:3000/students/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/students/${id}`, { // Исправлен синтаксис URL
             method: 'DELETE',
         });
 
@@ -92,19 +94,20 @@ async function deleteStudent(id) {
 // Функция для обновления данных студента
 async function updateStudent(id) {
     const Name = prompt("Enter new Name:");
-    const Surname = parseFloat(prompt("Enter new Surname:"));
-    if (!Name || isNaN(Surname)) {
+    const Surname = prompt("Enter new Surname:"); // Исправлено на prompt вместо parseFloat
+    const Patronymic = prompt("Enter new Patronymic:"); // Добавлено поле Patronymic
+    if (!Name || !Surname) {
         alert('Please provide valid Name and Surname');
         return;
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/students/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/students/${id}`, { // Исправлен синтаксис URL
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ Name, Surname })
+            body: JSON.stringify({ Name, Surname, Patronymic }) // Добавлено поле Patronymic
         });
 
         if (!response.ok) {
@@ -118,13 +121,40 @@ async function updateStudent(id) {
     }
 }
 
+
+// Функция для получения списка студентов
+async function fetchStudentsByGroup(groupId) {
+    try {
+        const response = await fetch(`http://localhost:3000/students/group/${groupId}`); // Используем groupId в URL
+        if (!response.ok) {
+            throw new Error('Failed to fetch students');
+        }
+        const students = await response.json();
+
+        const select = document.getElementById('student-name-choice');
+        select.innerHTML = '';  // Очищаем список
+        students.forEach(student => {
+            const option = document.createElement('option');
+            option.innerHTML = `${student.Name} ${student.Surname} ${student.Patronymic || ''}`;
+            option.value = student.id;
+            select.appendChild(option);
+        });
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
 // Загружаем список студентов при загрузке страницы
-//window.onload = fetchStudents;
+//window.onload = fetchStudents; // Убедитесь, что эта строка не закомментирована
+
 
 export default {
     updateStudent,
     deleteStudent,
     addStudent,
     fetchStudents,
-    getStudentsList
+    getStudentsList,
+    fetchStudentsByGroup
 };

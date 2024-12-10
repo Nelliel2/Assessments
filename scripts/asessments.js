@@ -33,12 +33,17 @@ async function ready() {
 
     updateAssessmentTable();
 
-    let studentsList = await studentController.getStudentsList();
-    let subjectsList = await subjectController.getSubjectsList();
-    let groupList = await groupController.getGroupsList();
-    
-    updateSelectBox("student-name-choice", studentsList);
-    updateSelectBox("group-name-choice", groupList);
+
+    await groupController.fetchGroups();
+    let GroupId = document.getElementById("group-name-choice").value;
+    await studentController.fetchStudentsByGroup(GroupId);
+
+    //let studentsList = await studentController.getStudentsList();
+    //let subjectsList = await subjectController.getSubjectsList();
+    //let groupList = await groupController.getGroupsList();
+
+    //updateSelectBox("student-name-choice", studentsList);
+    //updateSelectBox("group-name-choice", groupList);
 }
 
 function updateSelectBox(id, options) {
@@ -60,13 +65,10 @@ function updateSelectBox(id, options) {
 
 function updateAssessmentTable() {
     console.log("UpdateTable");
-    var table = document.getElementById('assessments-content');
+    var table = document.getElementById('assessments-container');
 
+    table.innerHTML = "";
 
-    while(table.firstChild){
-        table.removeChild(table.firstChild);
-    }
-    
 
     let startDate = document.getElementById("start-period");
     let endDate = document.getElementById("end-period");
@@ -77,13 +79,17 @@ function updateAssessmentTable() {
 
 function newAssessment(assessment, asessmentDate, assessmentClassName) {
 
-    let assessmentsList = document.getElementById("assessments-content");
-    
+    let container = document.getElementById("assessments-container");
+
     if (!asessmentDate) {
         asessmentDate = document.getElementById("asessment-date").valueAsDate.toLocaleDateString();;
     } else {
         asessmentDate = asessmentDate.toLocaleDateString("ru");
     }
+
+    let row = document.createElement("div");
+    row.classList.add("assessments-content", "assessments-row");
+
     console.log(asessmentDate);
     let dateElementDiv = document.createElement("div");
     dateElementDiv.classList.add("assessments-content-element");
@@ -99,8 +105,10 @@ function newAssessment(assessment, asessmentDate, assessmentClassName) {
     assessmentDiv.textContent = assessment;
     assessmentElementDiv.appendChild(assessmentDiv);
 
-    assessmentsList.appendChild(dateElementDiv);
-    assessmentsList.appendChild(assessmentElementDiv);
+    row.appendChild(dateElementDiv);
+    row.appendChild(assessmentElementDiv);
+
+    container.appendChild(row);
 
 }
 
@@ -108,14 +116,25 @@ document.addEventListener("DOMContentLoaded", ready);
 
 document.addEventListener('DOMContentLoaded', () => {
     const buttonFive = document.getElementById('assessment-five');
-    buttonFive.addEventListener('click',  () => newAssessment(5, false, 'assessment-five'));
+    buttonFive.addEventListener('click', () => newAssessment(5, false, 'assessment-five'));
 
     const buttonFour = document.getElementById('assessment-four');
-    buttonFour.addEventListener('click',  () => newAssessment(4, false, 'assessment-four'));
+    buttonFour.addEventListener('click', () => newAssessment(4, false, 'assessment-four'));
 
     const buttonThree = document.getElementById('assessment-three');
-    buttonThree.addEventListener('click',  () => newAssessment(3, false, 'assessment-three'));
+    buttonThree.addEventListener('click', () => newAssessment(3, false, 'assessment-three'));
 
     const buttonTwo = document.getElementById('assessment-two');
-    buttonTwo.addEventListener('click',  () => newAssessment(2, false, 'assessment-two'));
+    buttonTwo.addEventListener('click', () => newAssessment(2, false, 'assessment-two'));
+
+    
+    const updateTableButton = document.getElementById('button-update-assessment-table');
+    updateTableButton.addEventListener('click', () => updateAssessmentTable());
+
+    document.querySelector("#group-name-choice").addEventListener('change', function (e) {
+        studentController.fetchStudentsByGroup(e.target.value);
+    })
+
 });
+
+

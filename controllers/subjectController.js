@@ -7,19 +7,19 @@ async function fetchSubjects() {
             throw new Error('Failed to fetch subjects');
         }
         const subjects = await response.json();
-        const list = document.getElementById('subject-list');
-        list.innerHTML = '';  // Очищаем список
+        const select = document.getElementById('subject-name-choice');
+        select.innerHTML = '';  // Очищаем список
         subjects.forEach(subject => {
-            const li = document.createElement('li');
-            li.textContent = subject.Name;
-            list.appendChild(li);
+            const option = document.createElement('option');
+            option.innerHTML = subject.Name;
+            option.value = subject.id;
+            select.appendChild(option);
         });
     } catch (err) {
         console.error(err);
         alert('Error fetching subjects');
     }
 }
-
 
 // Функция для получения массива студентов
 async function getSubjectsList() {
@@ -116,7 +116,7 @@ async function updateSubject(id) {
 }
 
 // Загружаем список предметов при загрузке страницы
-// window.onload = fetchSubjects;
+window.onload = fetchSubjects;
 
 export default {
     updateSubject,
