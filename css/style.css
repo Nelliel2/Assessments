@@ -188,4 +188,11 @@ button:hover{
     padding: 0px 25px 4px 35px;
 }
 
+#subject-name-choice option {
+    font-size: 16px;
+}
+
+#subject-name-choice:focus {
+    outline: 0;
+}
 
