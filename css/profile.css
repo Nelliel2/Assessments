@@ -1,0 +1,93 @@
+.profile-container {
+
+    width: 80%;
+    margin: auto;
+}
+
+h4 {
+    margin: 20px 0 10px 0;
+
+}
+
+.tabs {
+    position: relative;
+    display: flex;
+    outline: 1px solid #f1f1f1;
+    background-color: #dddddd;
+    border-radius: 8px 8px 0 0;
+    height: 40px;
+    align-items: center;
+}
+
+.tab,
+.tab-title {
+
+    display: inline-block;
+    /* Выстраиваем по горизонтали */
+
+}
+
+.tab input[type="radio"] {
+    display: none;
+}
+
+.tab-title {
+    display: flex;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+    padding: 11px 20px;
+    width: 200px;
+    border-bottom: none;
+    height: 100%;
+}
+
+.tab-title-text {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tab :not(:checked)+.tab-title .tab-title-text {
+    background-color: #dddddd;
+    color: black;
+    border-radius: 15px;
+    padding: 5px 20px;
+    transition: background-color 0.2s ease-in;
+}
+
+.tab :not(:checked)+.tab-title:hover .tab-title-text {
+    background-color: #b4bdce;
+    color: black;
+    border-radius: 15px;
+    padding: 5px 20px;
+    transition: background-color 0.1s ease-in;
+}
+
+.tab :checked+.tab-title:click .tab-title-text {
+    background-color: #b4bdce;
+    color: white;
+    border-radius: 15px;
+    padding: 5px 20px;
+}
+
+.tab-content {
+
+    position: absolute;
+    border: 1px solid #dddddd;
+    padding: 10px;
+    left: 0;
+    width: 100%;
+    display: none;
+}
+
+.tab :checked+.tab-title {
+    position: relative;
+    background-color: #70a5ff;
+    color: white;
+    z-index: 1;
+}
+
+.tab :checked~.tab-content {
+    display: block;
+}

@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import {sequelize} from '../db_connection.js';
 import {StudyPlan} from './studyPlan.js';
-import {Student} from './student.js';
+import {Students} from './students.js';
 
 const Group = sequelize.define('Group', {
   Name: {
@@ -10,7 +10,7 @@ const Group = sequelize.define('Group', {
   }
 });
 Group.hasMany(StudyPlan);
-Group.hasMany(Student);
+Group.hasMany(Students);
 
 export { Group };
 
