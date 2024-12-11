@@ -22,6 +22,21 @@ select {
   font-size: 1em;
 }
 
+select:invalid {
+  color: #757575;
+}
+
+select:focus-visible {
+    background-color: #ddd;
+    outline: none;
+}
+
+input:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+
 button:hover{
     background-color: black;
 }
