@@ -3,6 +3,7 @@
 import studentController from '/studentController.js';
 import subjectController from '/subjectController.js';
 import groupController from '/groupController.js';
+import assessmentController from '/assessmentController.js';
 
 
 
@@ -31,12 +32,15 @@ async function ready() {
         endDate.value = endPeriod2.toISOString().split('T')[0];
     }
 
-    updateAssessmentTable();
+    
 
-
+    await subjectController.fetchSubjects();
     await groupController.fetchGroups();
     let GroupId = document.getElementById("group-name-choice").value;
     await studentController.fetchStudentsByGroup(GroupId);
+
+
+    //updateAssessmentTable();
 
     //let studentsList = await studentController.getStudentsList();
     //let subjectsList = await subjectController.getSubjectsList();
@@ -74,18 +78,25 @@ function updateAssessmentTable() {
     let endDate = document.getElementById("end-period");
 
     let assessmentColorsClass = [undefined, undefined, "assessment-two", "assessment-three", "assessment-four", "assessment-five"]
-    newAssessment(5, new Date("2021-11-02"), assessmentColorsClass[5]);
+
+
+    let studentId =  document.getElementById("student-name-choice").value;
+    let subjectId =  document.getElementById("subject-name-choice").value;
+    
+    assessmentController.fetchAssessmentByStudentAndSubject(studentId, subjectId);
+
+    //newAssessment(5, new Date("2021-11-02"), assessmentColorsClass[5]);
 }
 
 function newAssessment(assessment, asessmentDate, assessmentClassName) {
-
-    let container = document.getElementById("assessments-container");
 
     if (!asessmentDate) {
         asessmentDate = document.getElementById("asessment-date").valueAsDate.toLocaleDateString();;
     } else {
         asessmentDate = asessmentDate.toLocaleDateString("ru");
     }
+
+    let container = document.getElementById("assessments-container");
 
     let row = document.createElement("div");
     row.classList.add("assessments-content", "assessments-row");
@@ -133,7 +144,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector("#group-name-choice").addEventListener('change', function (e) {
         studentController.fetchStudentsByGroup(e.target.value);
+        var table = document.getElementById('assessments-container');
+        table.innerHTML = "";
     })
+
+    document.querySelector("#student-name-choice").addEventListener('change', function (e) {
+        updateAssessmentTable();  
+    })
+    document.querySelector("#subject-name-choice").addEventListener('change', function (e) {
+        if (document.querySelector("#student-name-choice").value) {
+            updateAssessmentTable();
+        }
+    })
+
 
 });
 

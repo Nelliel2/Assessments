@@ -7,6 +7,7 @@ import {Group} from './models/group.js';
 import {Assessment} from './models/assessment.js'; 
 
 
+
 import path from 'path';
 
 const app = express();
@@ -221,97 +222,105 @@ app.delete('/groups/:id', async (req, res) => {
 });
 
 
-// Получить все оценки
-app.get('/assessments', async (req, res) => {
+// API для получения всех оценок
+app.get('/api/assessments', async (req, res) => {
   try {
-    const assessments = await Assessment.findAll({
-      include: [
-        { model: Student, attributes: ['id', 'Name', 'Surname'] },
-        { model: Subject, attributes: ['id', 'Name'] }
-      ]
-    });
+    const assessments = await Assessment.findAll();
     res.json(assessments);
-  } catch (error) {
-    console.error('Error fetching assessments:', error);
-    res.status(500).json({ message: 'Failed to fetch assessments' });
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 });
 
-// Получить оценку по ID
-app.get('/assessments/:id', async (req, res) => {
-  const { id } = req.params;
+// API для получения оценок конкретного студента
+app.get('/api/students/:studentId/assessments', async (req, res) => {
+  const { studentId } = req.params;
   try {
-    const assessment = await Assessment.findByPk(id, {
-      include: [
-        { model: Student },
-        { model: Subject }
-      ]
-    });
-    if (!assessment) {
-      return res.status(404).json({ message: 'Assessment not found' });
-    }
-    res.json(assessment);
-  } catch (error) {
-    console.error('Error fetching assessment:', error);
-    res.status(500).json({ message: 'Failed to fetch assessment' });
+    const assessments = await Assessment.findAll({ where: { StudentId: studentId } });
+    res.json(assessments);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 });
 
-// Создать новую оценку
-app.post('/assessments', async (req, res) => {
-  const { Assessment: assessmentValue, Date, studentId, subjectId } = req.body;
+// API для получения оценок по конкретному предмету
+app.get('/api/subjects/:subjectId/assessments', async (req, res) => {
+  const { subjectId } = req.params;
   try {
-    const newAssessment = await Assessment.create({
-      Assessment: assessmentValue,
-      Date,
-      studentId,
-      subjectId
+    const assessments = await Assessment.findAll({ where: { SubjectId: subjectId } });
+    res.json(assessments);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// API для добавления новой оценки
+app.post('/api/assessments', async (req, res) => {
+  const { StudentId, SubjectId, Assessment: assessmentValue, Date } = req.body;
+  try {
+    const newAssessment = await Assessment.create({ 
+      StudentId, 
+      SubjectId, 
+      Assessment: assessmentValue, 
+      Date 
     });
     res.status(201).json(newAssessment);
-  } catch (error) {
-    console.error('Error creating assessment:', error);
-    res.status(500).json({ message: 'Failed to create assessment' });
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 });
 
-// Обновить оценку
-app.put('/assessments/:id', async (req, res) => {
+// API для обновления оценки по id
+app.put('/api/assessments/:id', async (req, res) => {
   const { id } = req.params;
-  const { Assessment: assessmentValue, Date } = req.body;
+  const { Assessment: newValue, Date: newDate } = req.body;
   try {
     const assessment = await Assessment.findByPk(id);
     if (!assessment) {
-      return res.status(404).json({ message: 'Assessment not found' });
+      return res.status(404).send('Assessment not found');
     }
-    assessment.Assessment = assessmentValue;
-    assessment.Date = Date;
+    assessment.Assessment = newValue;
+    assessment.Date = newDate;
     await assessment.save();
-    res.json(assessment);
-  } catch (error) {
-    console.error('Error updating assessment:', error);
-    res.status(500).json({ message: 'Failed to update assessment' });
+    res.status(200).json(assessment);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 });
 
-// Удалить оценку
-app.delete('/assessments/:id', async (req, res) => {
+// API для удаления оценки по id
+app.delete('/api/assessments/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const assessment = await Assessment.findByPk(id);
     if (!assessment) {
-      return res.status(404).json({ message: 'Assessment not found' });
+      return res.status(404).send('Assessment not found');
     }
     await assessment.destroy();
-    res.status(204).send(); // Успешное удаление без контента
-  } catch (error) {
-    console.error('Error deleting assessment:', error);
-    res.status(500).json({ message: 'Failed to delete assessment' });
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 });
 
-
-
-
+// API для получения оценки конкретного ученика по конкретному предмету
+app.get('/api/assessments/student/:studentId/subject/:subjectId', async (req, res) => {
+  const { studentId, subjectId } = req.params;
+  try {
+    const assessment = await Assessment.findAll({ 
+      where: { 
+        StudentId: studentId, 
+        SubjectId: subjectId 
+      } 
+    });
+    if (!assessment) {
+      return res.status(404).send('Assessment not found for this student and subject');
+    }
+    res.json(assessment);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
 
 
 

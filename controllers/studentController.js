@@ -23,26 +23,6 @@ async function fetchStudents() {
     }
 }
 
-
-// Функция для получения массива студентов
-async function getStudentsList() {
-    try {
-        const response = await fetch('http://localhost:3000/api/students'); // Добавлен префикс /api
-        if (!response.ok) {
-            throw new Error('Failed to fetch students');
-        }
-        const students = await response.json();
-        let arr = [];
-        students.forEach(student => {
-            arr.push(`${student.Name} ${student.Surname} ${student.Patronymic || ''}`); // Исправлен синтаксис шаблонной строки
-        });
-        return arr;
-    } catch (err) {
-        console.error(err);
-        alert('Error fetching students');
-    }
-}
-
 // Функция для добавления нового студента
 async function addStudent() {
     const Name = document.getElementById('Name').value;
@@ -66,7 +46,6 @@ async function addStudent() {
             throw new Error('Failed to add student');
         }
 
-        fetchStudents();  // Обновляем список студентов
     } catch (err) {
         console.error(err);
         alert('Error adding student');
@@ -133,8 +112,15 @@ async function fetchStudentsByGroup(groupId) {
 
         const select = document.getElementById('student-name-choice');
         select.innerHTML = '';  // Очищаем список
+
+        let emptyOption = document.createElement('option');
+        emptyOption.selected = true;
+        emptyOption.disabled = true;
+        emptyOption.hidden = true;
+        select.appendChild(emptyOption);
+
         students.forEach(student => {
-            const option = document.createElement('option');
+            let option = document.createElement('option');
             option.innerHTML = `${student.Name} ${student.Surname} ${student.Patronymic || ''}`;
             option.value = student.id;
             select.appendChild(option);
@@ -145,16 +131,10 @@ async function fetchStudentsByGroup(groupId) {
     }
 }
 
-
-// Загружаем список студентов при загрузке страницы
-//window.onload = fetchStudents; // Убедитесь, что эта строка не закомментирована
-
-
 export default {
     updateStudent,
     deleteStudent,
     addStudent,
     fetchStudents,
-    getStudentsList,
     fetchStudentsByGroup
 };
