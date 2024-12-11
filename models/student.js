@@ -2,8 +2,6 @@ import { Sequelize, DataTypes } from 'sequelize';
 import {sequelize} from '../db_connection.js';
 import {Assessment} from './assessment.js';
 import {User} from './user.js';
-import {StudentsGroup} from './studentsGroup.js';
-
 const Student = sequelize.define('Student', {
   Name: {
     type: DataTypes.STRING,
@@ -21,6 +19,5 @@ const Student = sequelize.define('Student', {
 
 Student.hasMany(Assessment);
 Student.hasMany(User);
-Student.hasMany(StudentsGroup);
 
 export { Student };
