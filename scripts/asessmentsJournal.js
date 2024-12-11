@@ -74,8 +74,8 @@ function updateAssessmentTable() {
     table.innerHTML = "";
 
 
-    let startDate = document.getElementById("start-period");
-    let endDate = document.getElementById("end-period");
+    let startDate = document.getElementById("start-period").value;
+    let endDate = document.getElementById("end-period").value;
 
     let assessmentColorsClass = [undefined, undefined, "assessment-two", "assessment-three", "assessment-four", "assessment-five"]
 
@@ -83,43 +83,18 @@ function updateAssessmentTable() {
     let studentId =  document.getElementById("student-name-choice").value;
     let subjectId =  document.getElementById("subject-name-choice").value;
     
-    assessmentController.fetchAssessmentByStudentAndSubject(studentId, subjectId);
+    assessmentController.fetchAssessmentsByStudentAndSubject(studentId, subjectId, startDate, endDate, 'asc');
 
     //newAssessment(5, new Date("2021-11-02"), assessmentColorsClass[5]);
 }
 
-function newAssessment(assessment, asessmentDate, assessmentClassName) {
+async function newAssessment(assessmentValue) {
 
-    if (!asessmentDate) {
-        asessmentDate = document.getElementById("asessment-date").valueAsDate.toLocaleDateString();;
-    } else {
-        asessmentDate = asessmentDate.toLocaleDateString("ru");
-    }
-
-    let container = document.getElementById("assessments-container");
-
-    let row = document.createElement("div");
-    row.classList.add("assessments-content", "assessments-row");
-
-    console.log(asessmentDate);
-    let dateElementDiv = document.createElement("div");
-    dateElementDiv.classList.add("assessments-content-element");
-    let dateDiv = document.createElement("div");
-    dateDiv.classList.add("assessments-date");
-    dateDiv.textContent = asessmentDate;
-    dateElementDiv.appendChild(dateDiv);
-
-    let assessmentElementDiv = document.createElement("div");
-    assessmentElementDiv.classList.add("assessments-content-element");
-    let assessmentDiv = document.createElement("div");
-    assessmentDiv.classList.add("assessments-assessment", assessmentClassName);
-    assessmentDiv.textContent = assessment;
-    assessmentElementDiv.appendChild(assessmentDiv);
-
-    row.appendChild(dateElementDiv);
-    row.appendChild(assessmentElementDiv);
-
-    container.appendChild(row);
+    let studentId =  Number(document.getElementById("student-name-choice").value);
+    let subjectId =  Number(document.getElementById("subject-name-choice").value);
+    let asessmentDate = document.getElementById("asessment-date").value;
+    await assessmentController.addAssessment(studentId, subjectId, assessmentValue, asessmentDate);
+    updateAssessmentTable();
 
 }
 
@@ -127,16 +102,16 @@ document.addEventListener("DOMContentLoaded", ready);
 
 document.addEventListener('DOMContentLoaded', () => {
     const buttonFive = document.getElementById('assessment-five');
-    buttonFive.addEventListener('click', () => newAssessment(5, false, 'assessment-five'));
+    buttonFive.addEventListener('click', () => newAssessment(5));
 
     const buttonFour = document.getElementById('assessment-four');
-    buttonFour.addEventListener('click', () => newAssessment(4, false, 'assessment-four'));
+    buttonFour.addEventListener('click', () => newAssessment(4));
 
     const buttonThree = document.getElementById('assessment-three');
-    buttonThree.addEventListener('click', () => newAssessment(3, false, 'assessment-three'));
+    buttonThree.addEventListener('click', () => newAssessment(3));
 
     const buttonTwo = document.getElementById('assessment-two');
-    buttonTwo.addEventListener('click', () => newAssessment(2, false, 'assessment-two'));
+    buttonTwo.addEventListener('click', () => newAssessment(2));
 
     
     const updateTableButton = document.getElementById('button-update-assessment-table');

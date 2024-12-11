@@ -1,4 +1,4 @@
-import {Sequelize} from 'sequelize';
+import {Op, Sequelize} from 'sequelize';
 // Создание подключения к базе данных SQLite
 const sequelize = new Sequelize({
   dialect: 'sqlite',
@@ -18,7 +18,7 @@ const sequelize = new Sequelize({
 //export { sequelize };
 
 
-export {sequelize};
+export {Op, sequelize};
 
 // db_connection.js
 //export const dbConnection = sequelize;

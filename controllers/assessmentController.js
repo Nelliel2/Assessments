@@ -17,6 +17,7 @@ async function fetchAssessments() {
 }
 
 // Функция для добавления новой оценки
+// Функция для добавления новой оценки
 async function addAssessment(studentId, subjectId, assessmentValue, date) {
     if (!studentId || !subjectId || !assessmentValue || !date) {
         alert('All fields are required to add an assessment');
@@ -29,19 +30,27 @@ async function addAssessment(studentId, subjectId, assessmentValue, date) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ studentId, subjectId, Assessment: assessmentValue, Date: date })
+            // Исправлено: StudentId и SubjectId с заглавной буквы
+            body: JSON.stringify({ 
+                StudentId: studentId, 
+                SubjectId: subjectId, 
+                Assessment: assessmentValue, 
+                Date: date 
+            })
         });
 
         if (!response.ok) {
             throw new Error('Failed to add assessment');
         }
 
-        fetchAssessments(); // Обновляем список оценок
+        console.log('Оценка добавлена успешно');
+        // fetchAssessments(); // Обновляем список оценок (раскомментируй, если нужно)
     } catch (err) {
         console.error(err);
         alert('Error adding assessment');
     }
 }
+
 
 // Функция для удаления оценки
 async function deleteAssessment(id) {
@@ -128,16 +137,22 @@ async function fetchAssessmentsBySubject(subjectId) {
     }
 }
 
-// Функция для получения оценки ученика по предмету
-async function fetchAssessmentByStudentAndSubject(studentId, subjectId) {
+
+// Функция для получения оценок ученика по предмету с фильтрацией и сортировкой
+async function fetchAssessmentsByStudentAndSubject(studentId, subjectId, from = null, to = null, sort = 'asc') {
     try {
-        const response = await fetch(`http://localhost:3000/api/assessments/student/${studentId}/subject/${subjectId}`);
+        const params = new URLSearchParams();
+        if (from) params.append('startDate', from);
+        if (to) params.append('endDate', to);
+        if (sort) params.append('sort', sort);
+
+        const response = await fetch(`http://localhost:3000/api/assessments/student/${studentId}/subject/${subjectId}?${params}`);
         
         if (!response.ok) {
             if (response.status === 404) {
-                alert('Оценка для этого ученика по этому предмету не найдена');
+                alert('Оценки для этого ученика по этому предмету не найдены');
             } else {
-                throw new Error('Не удалось получить оценку');
+                throw new Error('Не удалось получить оценки');
             }
             return;
         }
@@ -150,12 +165,13 @@ async function fetchAssessmentByStudentAndSubject(studentId, subjectId) {
         assessments.forEach(assessment => {
             let row = document.createElement("div");
             row.classList.add("assessments-content", "assessments-row");
+            row.id = assessment.id;
         
             let dateElementDiv = document.createElement("div");
             dateElementDiv.classList.add("assessments-content-element");
             let dateDiv = document.createElement("div");
             dateDiv.classList.add("assessments-date");
-            dateDiv.textContent = assessment.Date;
+            dateDiv.textContent = new Date(assessment.Date).toLocaleDateString("ru");;
             dateElementDiv.appendChild(dateDiv);
         
             let assessmentElementDiv = document.createElement("div");
@@ -171,12 +187,13 @@ async function fetchAssessmentByStudentAndSubject(studentId, subjectId) {
             container.appendChild(row);
         });
 
-
     } catch (err) {
-        console.error('Ошибка при получении оценки:', err.message);
-        alert('Ошибка при получении оценки');
+        console.error('Ошибка при получении оценок:', err.message);
+        alert('Ошибка при получении оценок');
     }
 }
+
+
 
 
 export default {
@@ -186,5 +203,5 @@ export default {
     updateAssessment,
     fetchAssessmentsByStudent,
     fetchAssessmentsBySubject,
-    fetchAssessmentByStudentAndSubject
+    fetchAssessmentsByStudentAndSubject
 };

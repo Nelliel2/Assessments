@@ -6,10 +6,10 @@
   import {StudyPlan} from './models/studyPlan.js';
   import {Subject} from './models/subject.js';
   
-  import {Assessment} from './models/assessment.js';
+  //import {Assessment} from './models/assessment.js';
   import {Teacher} from './models/teacher.js';
   import {User} from './models/user.js';
-  import { Group } from './models/internal.js';
+  import { Group, Assessment } from './models/internal.js';
 
   (async () => {
     await sequelize.sync({ force: true });  // Удалит старые таблицы и пересоздаст их

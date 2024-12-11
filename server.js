@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {sequelize} from './db_connection.js';
+import {Op, sequelize} from './db_connection.js';
 import {Student} from './models/student.js';
 import {Subject} from './models/subject.js'; 
 import {Group} from './models/group.js'; 
@@ -303,26 +303,47 @@ app.delete('/api/assessments/:id', async (req, res) => {
   }
 });
 
-// API для получения оценки конкретного ученика по конкретному предмету
+// API для получения оценок студента по предмету с фильтрацией и сортировкой по дате
 app.get('/api/assessments/student/:studentId/subject/:subjectId', async (req, res) => {
   const { studentId, subjectId } = req.params;
+  const { startDate, endDate } = req.query;
+
   try {
-    const assessment = await Assessment.findAll({ 
-      where: { 
-        StudentId: studentId, 
-        SubjectId: subjectId 
-      } 
-    });
-    if (!assessment) {
-      return res.status(404).send('Assessment not found for this student and subject');
+    // Условие для WHERE
+    const whereClause = {
+      StudentId: studentId,
+      SubjectId: subjectId
+    };
+
+    // Если переданы даты, добавляем фильтрацию по дате
+    if (startDate && endDate) {
+      whereClause.Date = { 
+        [Op.between]: [startDate, endDate] 
+      };
+    } else if (startDate) {
+      whereClause.Date = { 
+        [Op.gte]: startDate
+      };
+    } else if (endDate) {
+      whereClause.Date = { 
+        [Op.lte]: endDate
+      };
     }
-    res.json(assessment);
+
+    // Получаем оценки студента по предмету с сортировкой по дате
+    const assessments = await Assessment.findAll({
+      where: whereClause,
+      order: [
+        [sequelize.literal("STRFTIME('%Y-%m-%d', Date)"), 'ASC'] // Сортировка по дате (возрастание)
+      ]
+    });
+
+    res.status(200).json(assessments);
   } catch (err) {
+    console.error(err);
     res.status(500).send(err.message);
   }
 });
-
-
 
 
 
