@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <!-- <script src="/studentController.js" type="module"></script> -->
+    <!-- <script src="/asessments.js"  type="module"></script> -->
+    <style>
+        .journal {
+            width: 80vw;
+            margin: 5vw auto;
+        }
+
+        .journal-panel {
+            width: max-content;
+        }
+
+        .table {
+            display: flex;
+            flex-direction: column;
+            margin: 30px auto;
+            max-height: 73vh;
+            max-width: 80vw;
+            overflow: auto;
+            border: 1px solid #ddd;
+            border-top: 0;
+        }
+
+        .table-captions {
+            font-weight: bold;
+            outline: 1px solid #ddd;
+            position: sticky;
+            top: 1px;
+            z-index: 1;
+        }
+
+        .row {
+            display: flex;
+            width: max-content;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .column-name {
+            width: 300px;
+            position: sticky;
+            left: 0px;
+            border-right: 1px solid #ddd;
+        }
+
+        .column-date {
+            width: 90px;
+            border-left: 1px solid #ddd;
+        }
+
+        .cell:disabled {
+            color: black;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", addNewDate);
+
+        async function addNewDate() {
+            let currDate = new Date();
+            let children = document.getElementById("journal-table").children;
+
+
+            let input = document.createElement('input');
+            input.name ="assesment";
+            input.classList.add("cell", "column-date");
+            input.type = "date";
+            children[0].appendChild(input);
+            
+
+            for (let i = 1; i < children.length; i++) {
+                let input = document.createElement('input');
+                input.name ="assesment";
+                input.classList.add("cell", "column-date");
+                input.type = "number";
+                children[i].appendChild(input);
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+    <div data-id="posts"></div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="site-name">
+                <h2>Оценки</h2>
+            </div>
+            <nav class="menu">
+                <ul class="header-menu">
+                    <li class="main-menu-element">
+                        <a href="index.html">Информация</a>
+                    </li>
+                    <li class="main-menu-element">
+                        <a href="registration.html">Регистрация</a>
+                    </li>
+                    <li>
+                        |
+                    </li>
+                    <li class="main-menu-element main-menu-element-enter">
+                        <a href="enter.html">Войти</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+
+    <div class="journal">
+        <div class="assessments-header">
+            <div class="curr-subject">
+                <select name="subject" id="subject-name-choice" class="select-box">
+                    <option value="1">Крутой предмет</option>
+                    <option value="1">Очень крутой предмет</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="journal-main-panel">
+
+
+            <div class="journal-panel">
+                <div class="journal-table table" id="journal-table">
+                    <div class="row table-captions">
+                        <input name="name" class="cell column-name" value="Студент" disabled>
+                        <input name="assesment" class="cell column-date" type="date">
+                        <input name="assesment" class="cell column-date" type="date">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Иксанов Олег Ренатович" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+                    <div class="row">
+                        <input name="name" class="cell column-name" value="Смирнова Анна Николаевна" disabled>
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                        <input name="assesment" class="cell column-date" type="number" max="5" min="2" step="0.1">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
