@@ -7,83 +7,8 @@
     <title>Site</title>
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/form.css">
+    <link rel="stylesheet" href="./css/profile.css">
     <!-- <script src=./registration.js" type="module"></script> -->
-    <!-- <script src="/studentController.js" type="module"></script> -->
-    <style>
-        .tabs {
-            position: relative;
-            display: flex;
-            outline: 1px solid #f1f1f1;
-            background-color: #dddddd;
-            border-radius: 8px 8px 0 0;
-            height: 40px;
-        }
-
-        .tab,
-        .tab-title {
-            display: inline-block;
-            /* Выстраиваем по горизонтали */
-        }
-
-        .tab input[type="radio"] {
-            display: none;
-        }
-
-        .tab-title {
-
-            border-radius: 8px 8px 0 0;
-            /* Цвет фона */
-            padding: 5px 10px;
-            /* Поля вокруг текста */
-            /* Параметры рамки */
-            border-bottom: none;
-            /* Снизу линию убираем */
-            height: 100%;
-        }
-
-        .tab-content {
-            
-            position: absolute;
-            /* Абсолютное позиционирование */
-            border: 1px solid #dddddd;
-            /* Параметры рамки */
-            padding: 10px;
-            /* Поля вокруг текста */
-            left: 0;
-            /* Размещаем у левого края */
-            width: 100%;
-            /* Ширина содержимого */
-            display: none;
-            /* Прячем вкладку */
-        }
-
-        .tab :checked+.tab-title {
-            position: relative;
-            /* Относительное позиционирование */
-            background: #70a5ff;
-            /* Цвет фона */
-            color: white;
-            /* Сдвигаем вниз */
-            z-index: 1;
-            /* Отображаем поверх содержимого */
-        }
-
-        .tab :checked~.tab-content {
-            display: block;
-            /* Показываем активную вкладку */
-        }
-
-        .profile-container {
-
-            width: 80%;
-            margin: auto;
-        }
-
-        h4{
-            margin: 20px 0 10px 0;
-            
-        }
-    </style>
 </head>
 
 <body>
@@ -125,27 +50,26 @@
         <div class="tabs">
             <div class="tab">
                 <input type="radio" id="tab1" name="tab-group" checked>
-                <label for="tab1" class="tab-title">Безопасность</label>
+                <label for="tab1" class="tab-title"><span class="tab-title-text">Безопасность</span></label>
 
                 <section class="tab-content">
                     <form action="" class="form">
                         <h4>Изменить email</h4>
-                        <label for="Email">Email<span class="required">*</span></label>
-                        <input type="email" id="Email" placeholder="Введите новый email" value="anna20025612@mail.ru"
-                            required>
+                        <label for="Email">Email</label>
+                        <input type="email" id="Email" placeholder="Введите новый email" value="anna20025612@mail.ru">
 
                         <h4>Изменить пароль</h4>
-                        <label for="Password">Пароль<span class="required">*</span></label>
-                        <input type="password" id="Password-old" placeholder="Введите пароль" required>
+                        <label for="Password">Пароль</label>
+                        <input type="password" id="Password-old" placeholder="Введите пароль">
 
-                        <label for="Password">Новый пароль<span class="required">*</span></label>
-                        <input type="password" id="Password" placeholder="Введите новый пароль" required>
+                        <label for="Password">Новый пароль</label>
+                        <input type="password" id="Password" placeholder="Введите новый пароль">
 
-                        <label for="Password">Повторите пароль<span class="required">*</span></label>
-                        <input type="password" id="Password-repead" placeholder="Повторите пароль" required>
+                        <label for="Password">Повторите пароль</label>
+                        <input type="password" id="Password-repead" placeholder="Повторите пароль">
 
 
-                        <button type="submit" class="button" id="registration-button">Зарегистрироваться</button>
+                        <button type="submit" class="button" id="change-sequrety-button">Изменить</button>
                         <hr>
                         <div class="container signin">
                             <p>По всем вопросам обращайтесь на почту: aaa@mail.ru</p>
@@ -155,9 +79,27 @@
             </div>
             <div class="tab">
                 <input type="radio" id="tab2" name="tab-group">
-                <label for="tab2" class="tab-title">Вкладка 2</label> 
-                <section class="tab-content">Два</section>
-               </div>
+                <label for="tab2" class="tab-title"><span class="tab-title-text">Данные</span></label>
+                <section class="tab-content">
+                    <form action="" class="form">
+                        <h4>Изменить основные сведения</h4>
+                        <label for="Name">Имя</label>
+                        <input type="text" id="Name" placeholder="Введите имя">
+
+                        <label for="Surname">Фамилия</label>
+                        <input type="text" id="Surname" placeholder="Введите фамилию">
+
+                        <label for="Patronymic">Отчество</label>
+                        <input type="text" id="Patronymic" placeholder="Введите отчество">
+
+                        <button type="submit" class="button" id="change-name-button">Изменить</button>
+                        <hr>
+                        <div class="container signin">
+                            <p>По всем вопросам обращайтесь на почту: aaa@mail.ru</p>
+                        </div>
+                    </form>
+                </section>
+            </div>
         </div>
     </div>
 </body>
