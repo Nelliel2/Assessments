@@ -7,7 +7,9 @@
     <title>Site</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="form.css">
-    <script src="studentController.js" type="module"></script>
+    <script src="/studentController.js" type="module"></script>
+    <script src="/userController.js" type="module"></script>
+    <script src="/login.js" type="module"></script>
 </head>
 
 <body>
@@ -29,14 +31,14 @@
                         |
                     </li>
                     <li class="main-menu-element main-menu-element-enter">
-                        <a href="enter.html">Войти</a>
+                        <a href="login.html">Войти</a>
                     </li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <div id="registration-form" class="form-container">
+    <div id="login-form" class="form-container">
         <div class="form-header">
             <div class="form-header-text">
                 <h1 style=" margin-bottom: 0.5em;">Вход</h1>
@@ -51,7 +53,7 @@
             <input type="password" id="Password" placeholder="Введите пароль" required>
             </select>
 
-            <button type="submit" class="button">Войти</button>
+            <button type="submit" class="button" id="login-button">Войти</button>
             <hr>
             <div class="container signin">
                 <p>У вас нет аккаунта? <a href="registration.html">Зарегистрироваться</a>.</p>

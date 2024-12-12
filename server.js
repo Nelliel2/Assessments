@@ -7,9 +7,11 @@ import {Group} from './models/group.js';
 import {Assessment} from './models/assessment.js'; 
 import {User} from './models/user.js'; 
 
-
+import bcrypt from 'bcrypt'; 
 
 import path from 'path';
+
+
 
 const app = express();
 const port = 3000;
@@ -413,6 +415,36 @@ app.get('/users/:id', async (req, res) => {
   }
 });
 
+
+// API для авторизации пользователя
+app.post('/login', async (req, res) => {
+  const { Email, Password } = req.body;
+
+  if (!Email || !Password) {
+    return res.status(400).json({ error: 'Email and Password are required' });
+  }
+
+  try {
+    // Ищем пользователя по email
+    const user = await User.findOne({ where: { Email } });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Сравниваем введённый пароль с хэшированным паролем из базы
+    const isMatch = await bcrypt.compare(Password, user.Password);
+
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+
+    res.status(200).json({ message: 'Login successful', user });
+  } catch (err) {
+    console.error('Ошибка при авторизации:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 
