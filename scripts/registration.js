@@ -1,4 +1,5 @@
 import studentController from '/studentController.js';
+import userController from '/userController.js';
 
 const passwordInput = document.getElementById("Password");
 const passwordRepeadInput = document.getElementById("Password-repead");
@@ -62,15 +63,24 @@ async function createUser() {
   const Name = document.getElementById('Name').value;
   const Surname = document.getElementById('Surname').value;
   const Patronymic = document.getElementById('Patronymic').value;
-  const GroupId = Number(document.getElementById('Group').value);  
+  const GroupId = Number(document.getElementById('Group').value);
 
-  let studentId = await studentController.addStudent(Name, Surname, Patronymic, GroupId);
+  const StudentId = await studentController.addStudent(Name, Surname, Patronymic, GroupId);
 
+  console.log(StudentId);
 
-  // return '/enter.html'
-  return ''
+  const Email = document.getElementById('Email').value;
+  const Password = document.getElementById('Password').value;
+
+  userController.addUser(Email, Password, StudentId, null);
+  return '/login.html';
 }
 
-regForm.addEventListener('submit', function(event) {
-  regForm.action = createUser();
+regForm.addEventListener('submit', async function (event) {
+  event.preventDefault();
+
+  regForm.action = await createUser();
+
+  window.location.href = '/login.html';
 });
+
