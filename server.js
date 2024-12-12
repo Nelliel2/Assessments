@@ -51,7 +51,7 @@ app.post('/students', async (req, res) => {
   const { Name, Surname, Patronymic, GroupId } = req.body;  // добавляем GroupId
   try {
     const student = await Student.create({ Name, Surname, Patronymic, GroupId });  // добавляем GroupId при создании
-    res.status(201).json(student);
+    res.status(201).json({ id: student.id });
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -261,6 +261,7 @@ app.get('/api/subjects/:subjectId/assessments', async (req, res) => {
 
 // API для добавления новой оценки
 app.post('/api/assessments', async (req, res) => {
+  console.log('Тело запроса:', req.body);
   const { StudentId, SubjectId, Assessment: assessmentValue, Date } = req.body;
   try {
     const newAssessment = await Assessment.create({ 

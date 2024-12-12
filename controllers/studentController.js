@@ -45,8 +45,7 @@ async function addStudent(Name, Surname, Patronymic, GroupId) {
             throw new Error('Failed to add student');
         }
         const data = await response.json();
-        console.log(data);
-
+        return data.id;
     } catch (err) {
         console.error(err);
         alert('Error adding student');

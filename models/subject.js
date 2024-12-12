@@ -9,8 +9,6 @@ const Subject = sequelize.define('Subject', {
     allowNull: false
   }
 });
-Subject.hasMany(Assessment);
-Subject.hasMany(StudyPlan);
 
 export { Subject };
 

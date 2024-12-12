@@ -10,6 +10,22 @@ const Assessment = sequelize.define('Assessment', {
   Date: {
     type: DataTypes.DATE,
     allowNull: false
+  },
+  SubjectId: {  
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Subjects', 
+      key: 'id'
+    }
+  },
+  StudentId: {  
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Students', 
+      key: 'id'
+    }
   }
 });
 

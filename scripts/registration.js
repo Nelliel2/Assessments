@@ -58,13 +58,13 @@ toggleGroupContainer();
 
 regButton.addEventListener("click", validateInput);
 
-function createUser() {
+async function createUser() {
   const Name = document.getElementById('Name').value;
   const Surname = document.getElementById('Surname').value;
   const Patronymic = document.getElementById('Patronymic').value;
   const GroupId = Number(document.getElementById('Group').value);  
 
-  studentController.addStudent(Name, Surname, Patronymic, GroupId);
+  let studentId = await studentController.addStudent(Name, Surname, Patronymic, GroupId);
 
 
   // return '/enter.html'

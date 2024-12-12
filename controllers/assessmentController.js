@@ -17,7 +17,6 @@ async function fetchAssessments() {
 }
 
 // Функция для добавления новой оценки
-// Функция для добавления новой оценки
 async function addAssessment(studentId, subjectId, assessmentValue, date) {
     if (!studentId || !subjectId || !assessmentValue || !date) {
         alert('All fields are required to add an assessment');
