@@ -43,7 +43,7 @@ async function ready() {
 
     await subjectController.fetchSubjects();
     await groupController.fetchGroups();
-    let GroupId = document.getElementById("group-name-choice").value;
+    let GroupId = document.getElementById("Group").value;
     await studentController.fetchStudentsByGroup(GroupId);
 
 
@@ -54,7 +54,7 @@ async function ready() {
     //let groupList = await groupController.getGroupsList();
 
     //updateSelectBox("student-name-choice", studentsList);
-    //updateSelectBox("group-name-choice", groupList);
+    //updateSelectBox("Group", groupList);
 }
 
 function updateAssessmentTable() {
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateTableButton = document.getElementById('button-update-assessment-table');
     updateTableButton.addEventListener('click', () => updateAssessmentTable());
 
-    document.querySelector("#group-name-choice").addEventListener('change', function (e) {
+    document.querySelector("#Group").addEventListener('change', function (e) {
         studentController.fetchStudentsByGroup(e.target.value);
         var table = document.getElementById('assessments-container');
         table.innerHTML = "";
