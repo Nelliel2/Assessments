@@ -1,18 +1,20 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {Op, sequelize} from './db_connection.js';
-import {Student} from './models/student.js';
-import {Subject} from './models/subject.js'; 
-import {Group} from './models/group.js'; 
-import {Assessment} from './models/assessment.js'; 
-import {User} from './models/user.js'; 
+import { Op, sequelize } from './db_connection.js';
+import { Student } from './models/student.js';
+import { Subject } from './models/subject.js';
+import { Group } from './models/group.js';
+import { Assessment } from './models/assessment.js';
+import { User } from './models/user.js';
 
-import bcrypt from 'bcrypt'; 
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import { authenticateToken } from './middleware/auth.js';
 
 import path from 'path';
 
 
-
+const SECRET_KEY = 'your-secret-key';
 const app = express();
 const port = 3000;
 
@@ -26,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static(path.join(__dirname, 'modules')));
 app.use(express.static(path.join(__dirname, 'img')));
 
- // Отдаём HTML-файл по запросу
+// Отдаём HTML-файл по запросу
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'index.html')); // Путь к файлу
 });
@@ -98,13 +100,13 @@ app.delete('/students/:id', async (req, res) => {
 // Функция для получения студентов из конкретной группы
 async function fetchStudentsByGroup(GroupId) {
   try {
-      const students = await Student.findAll({
-          where: { GroupId: GroupId }, // Фильтрация по GroupId
-      });
-      return students;
+    const students = await Student.findAll({
+      where: { GroupId: GroupId }, // Фильтрация по GroupId
+    });
+    return students;
   } catch (error) {
-      console.error('Error fetching students:', error);
-      throw error; // Пробрасываем ошибку дальше
+    console.error('Error fetching students:', error);
+    throw error; // Пробрасываем ошибку дальше
   }
 }
 
@@ -112,10 +114,10 @@ app.get('/students/group/:GroupId', async (req, res) => {
   const GroupId = req.params.GroupId;
 
   try {
-      const students = await fetchStudentsByGroup(GroupId);
-      res.json(students);
+    const students = await fetchStudentsByGroup(GroupId);
+    res.json(students);
   } catch (error) {
-      res.status(500).json({ message: 'Failed to fetch students' });
+    res.status(500).json({ message: 'Failed to fetch students' });
   }
 });
 
@@ -266,11 +268,11 @@ app.post('/api/assessments', async (req, res) => {
   console.log('Тело запроса:', req.body);
   const { StudentId, SubjectId, Assessment: assessmentValue, Date } = req.body;
   try {
-    const newAssessment = await Assessment.create({ 
-      StudentId, 
-      SubjectId, 
-      Assessment: assessmentValue, 
-      Date 
+    const newAssessment = await Assessment.create({
+      StudentId,
+      SubjectId,
+      Assessment: assessmentValue,
+      Date
     });
     res.status(201).json(newAssessment);
   } catch (err) {
@@ -325,15 +327,15 @@ app.get('/api/assessments/student/:studentId/subject/:subjectId', async (req, re
 
     // Если переданы даты, добавляем фильтрацию по дате
     if (startDate && endDate) {
-      whereClause.Date = { 
-        [Op.between]: [startDate, endDate] 
+      whereClause.Date = {
+        [Op.between]: [startDate, endDate]
       };
     } else if (startDate) {
-      whereClause.Date = { 
+      whereClause.Date = {
         [Op.gte]: startDate
       };
     } else if (endDate) {
-      whereClause.Date = { 
+      whereClause.Date = {
         [Op.lte]: endDate
       };
     }
@@ -403,7 +405,7 @@ app.get('/users', async (req, res) => {
 // API для получения пользователя по ID
 app.get('/users/:id', async (req, res) => {
   const { id } = req.params;
-  
+
   try {
     const user = await User.findByPk(id);
     if (!user) {
@@ -439,12 +441,25 @@ app.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid password' });
     }
 
-    res.status(200).json({ message: 'Login successful', user });
+    // Генерируем JWT токен
+    const token = jwt.sign(
+      { id: user.id, email: user.Email }, 
+      SECRET_KEY, 
+      { expiresIn: '1h' } // Время жизни токена — 1 час
+    );
+
+    res.status(200).json({ 
+      message: 'Login successful', 
+      token, 
+      user: { id: user.id, email: user.Email } // Не возвращаем пароль
+    });
   } catch (err) {
     console.error('Ошибка при авторизации:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
 
 
 
@@ -459,14 +474,14 @@ app.get('/sse', (req, res) => {
 
   // Отправка данных каждую секунду
   const intervalId = setInterval(() => {
-      const data = JSON.stringify({ message: 'Hello from server!', timestamp: new Date() });
-      res.write(`data: ${data}\n\n`);
+    const data = JSON.stringify({ message: 'Hello from server!', timestamp: new Date() });
+    res.write(`data: ${data}\n\n`);
   }, 1000);
 
   // Очистка интервала при закрытии соединения
   req.on('close', () => {
-      clearInterval(intervalId);
-      res.end();
+    clearInterval(intervalId);
+    res.end();
   });
 });
 

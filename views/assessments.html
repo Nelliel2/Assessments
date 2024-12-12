@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/studentController.js" type="module"></script>
+    <script src="/subjectController.js" type="module"></script>
+    <script src="/groupController.js" type="module"></script>
+    <script src="/assessmentController.js" type="module"></script>
+    <script src="/asessmentsJournal.js" type="module"></script>
+</head>
+
+<body>
+    <div data-id="posts"></div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="site-name">
+                <h2>Оценки</h2>
+            </div>
+            <nav class="menu">
+                <ul class="header-menu">
+                    <li class="main-menu-element">
+                        <a href="assessments.html" id="assessments-menu-button">Оценки</a>
+                    </li>
+                    <li class="main-menu-element">
+                        <a href="profile.html" id="profile-menu-button">Мой профиль</a>
+                    </li>
+                    <li>
+                        |
+                    </li>
+                    <li class="main-menu-element main-menu-element-enter">
+                        <a href="login.html" id="logout-menu-button">Выйти</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="assessments">
+        <div class="assessments-header">
+            <div class="curr-subject">
+                <select name="subject" id="subject-name-choice" class="select-box">
+                </select>
+            </div>
+        </div>
+
+        <div class="assessments-main-panel">
+            <div class="assessments-left-panel">
+                <div class="assessments-period-panel">
+                    <label for="start-period">Период с</label>
+                    <input type="date" id="start-period" name="trip-start" value="2018-07-22" min="2000-01-01"
+                        class="input-date" />
+
+                    <label for="end-period">до</label>
+                    <input type="date" id="end-period" name="trip-end" value="2018-07-22" min="2000-01-01"
+                        class="input-date" />
+
+                    <div class="assessment-button button-update-assessment-table">
+                        <span id="button-update-assessment-table">Показать</span>
+
+                    </div>
+                </div>
+
+                <div class="assessments-assessment-panel" id="assessments-assessment-panel">
+                    <div class="assessments-content">
+                        <div class="assessments-content-element assessments-captions">Дата</div>
+                        <div class="assessments-content-element assessments-captions">Оценки</div>
+                    </div>
+                    <div class="assessments-container" id="assessments-container">
+
+                    </div>
+                </div>
+            </div>
+            <div class="assessments-right-panel">
+                <div class="assesment-filter">
+                    <label for="group-name-choice">Группа</label>
+                    <select name="group" id="group-name-choice" class="select-box">
+                    </select>
+                </div>
+                <div class="assesment-filter">
+                    <label for="student-name-choice">Студент</label>
+                    <select name="student" id="student-name-choice" class="select-box">
+                    </select>
+                </div>
+                <div class="assesment-filter">
+                    <label for="start-period">Дата оценки</label>
+                    <input type="date" id="asessment-date" name="trip-date" value="2018-07-22" min="2000-01-01"
+                        class="input-date" />
+                </div>
+                <div class="assesment-filter">
+                    <label for="asessments-choice">Добавить оценку</label>
+                    <ul id="asessments-choice" class="asessments-choice">
+                        <li id="assessment-five" class="assessments-assessment assessment-button assessment-five">5</li>
+                        <li id="assessment-four" class="assessments-assessment assessment-button assessment-four">4</li>
+                        <li id="assessment-three" class="assessments-assessment assessment-button assessment-three">3</li>
+                        <li id="assessment-two" class="assessments-assessment assessment-button assessment-two">2</li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+
+</html>

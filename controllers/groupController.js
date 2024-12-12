@@ -7,6 +7,9 @@ async function fetchGroups() {
         }
         const groups = await response.json();
         const select = document.getElementById('group-name-choice');
+        if (!select) {
+            document.getElementById('Group');
+        }
         select.innerHTML = '';  // Очищаем список
         groups.forEach(group => {
             const option = document.createElement('option');

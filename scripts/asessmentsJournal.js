@@ -5,10 +5,17 @@ import subjectController from '/subjectController.js';
 import groupController from '/groupController.js';
 import assessmentController from '/assessmentController.js';
 
-
-
+const token = localStorage.getItem('token');
+if (!token) {
+    window.location.href = '/login.html';
+}
 
 async function ready() {
+    document.getElementById('logout-menu-button').addEventListener('click', () => {
+        localStorage.removeItem('token'); // Удаляем токен
+        window.location.href = '/login.html'; // Перенаправляем на страницу входа
+    });
+
     let currDate = new Date();
     let assessmentsDate = document.getElementById("asessment-date");
     console.dir(assessmentsDate);
@@ -48,23 +55,6 @@ async function ready() {
 
     //updateSelectBox("student-name-choice", studentsList);
     //updateSelectBox("group-name-choice", groupList);
-}
-
-function updateSelectBox(id, options) {
-    var select = document.getElementById(id);
-
-    // очистка списка
-    while (select.options.length > 0) {
-        select.options.remove(0);
-    }
-
-    // заполнение списка
-    for (var i = 0; i < options.length; i++) {
-        var option = document.createElement('option');
-        option.value = i;
-        option.text = options[i];
-        select.options.add(option);
-    }
 }
 
 function updateAssessmentTable() {

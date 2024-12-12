@@ -1,10 +1,12 @@
 import studentController from '/studentController.js';
 import userController from '/userController.js';
+import groupController from '/groupController.js';
 
 const passwordInput = document.getElementById("Password");
 const passwordRepeadInput = document.getElementById("Password-repead");
 const regButton = document.getElementById("registration-button");
 const regForm = document.getElementById('registration-form');
+
 
 const check = (input) => {
   if (input.value !== passwordInput.value) {
@@ -31,7 +33,6 @@ const validateInput = () => {
   }
 };
 
-
 const radioButtons = document.getElementsByName('role');
 const groupContainer = document.getElementById('group-container');
 const groupSelect = document.getElementById('Group');
@@ -42,6 +43,7 @@ function toggleGroupContainer() {
   if (selectedRole === 'student') {
     groupContainer.style.display = 'block';
     groupSelect.setAttribute('required', 'required'); // Делаем поле обязательным
+    groupController.fetchGroups();
   } else {
     groupContainer.style.display = 'none';
     groupSelect.removeAttribute('required'); // Делаем поле необязательным

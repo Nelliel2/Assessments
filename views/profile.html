@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/form.css">
     <link rel="stylesheet" href="/profile.css">
-    <!-- <script src=./registration.js" type="module"></script> -->
+    <script src="/profile.js" type="module"></script>
 </head>
 
 <body>
@@ -22,16 +22,16 @@
             <nav class="menu">
                 <ul class="header-menu">
                     <li class="main-menu-element">
-                        <a href="index.html">Информация</a>
+                        <a href="assessments.html" id="assessments-menu-button">Оценки</a>
                     </li>
                     <li class="main-menu-element">
-                        <a href="registration.html">Регистрация</a>
+                        <a href="profile.html" id="profile-menu-button">Мой профиль</a>
                     </li>
                     <li>
                         |
                     </li>
                     <li class="main-menu-element main-menu-element-enter">
-                        <a href="login.html">Выйти</a>
+                        <a href="login.html" id="logout-menu-button">Выйти</a>
                     </li>
                 </ul>
             </nav>
@@ -41,9 +41,9 @@
     <div id="profile-form" class="profile-container">
         <div class="form-header">
             <div class="form-header-text">
-                <h1>Смирнова Анна Николаевна</h1>
-                <p>Группа: 21-ПО</p>
-                <p>Email: anna20025612@mail.ru</p>
+                <h1 id="Name">Фамилия Имя Отчество</h1>
+                <p id="Group">Группа: № Группы</p>
+                <p id="Email">Email: 1@mail.ru</p>
             </div>
             <hr>
         </div>
@@ -56,7 +56,7 @@
                     <form action="" class="form">
                         <h4>Изменить email</h4>
                         <label for="Email">Email</label>
-                        <input type="email" id="Email" placeholder="Введите новый email" value="anna20025612@mail.ru">
+                        <input type="email" id="Email" placeholder="Введите новый email" value="1@mail.ru">
 
                         <h4>Изменить пароль</h4>
                         <label for="Password">Пароль</label>

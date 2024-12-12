@@ -104,13 +104,18 @@ async function loginUser(email, password) {
       throw new Error(data.error);
     }
 
-    console.log('User info:', data.user);
-    window.location.href = '/profile.html';
+    // Сохраняем токен в localStorage
+    localStorage.setItem('token', data.token); 
+    console.log('Токен:', data.token);
+    console.log('Информация о пользователе:', data.user);
+
+    window.location.href = '/profile.html'; // Перенаправляем на страницу профиля
   } catch (err) {
     console.error('Ошибка при авторизации:', err);
-    alert('Ошибка при авторизации:' + err);
+    alert('Ошибка при авторизации: ' + err.message);
   }
 }
+
 
 
 export default {
