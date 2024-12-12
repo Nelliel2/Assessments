@@ -15,9 +15,15 @@ const Student = sequelize.define('Student', {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  GroupId: {  // Обратите внимание на это поле
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Groups', // Укажите модель (таблицу) группы
+      key: 'id'  // Укажите ключ в таблице группы
+    }
+  }
 });
 
-Student.hasMany(Assessment);
-Student.hasMany(User);
-
 export { Student };
+

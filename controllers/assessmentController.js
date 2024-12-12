@@ -63,7 +63,14 @@ async function deleteAssessment(id) {
             throw new Error('Failed to delete assessment');
         }
 
-        fetchAssessments(); // Обновляем список оценок
+        let startDate = document.getElementById("start-period").value;
+        let endDate = document.getElementById("end-period").value;
+    
+        let studentId =  document.getElementById("student-name-choice").value;
+        let subjectId =  document.getElementById("subject-name-choice").value;
+        
+        fetchAssessmentsByStudentAndSubject(studentId, subjectId, startDate, endDate, 'asc');
+    
     } catch (err) {
         console.error(err);
         alert('Error deleting assessment');
@@ -143,7 +150,12 @@ async function fetchAssessmentsByStudentAndSubject(studentId, subjectId, from = 
     try {
         const params = new URLSearchParams();
         if (from) params.append('startDate', from);
-        if (to) params.append('endDate', to);
+        if (to) {
+            const toDate = new Date(to);
+            toDate.setDate(toDate.getDate() + 1); // Добавляем 1 день
+            const adjustedTo = toDate.toISOString().split('T')[0]; // Преобразуем обратно в формат YYYY-MM-DD
+            params.append('endDate', adjustedTo);
+        }
         if (sort) params.append('sort', sort);
 
         const response = await fetch(`http://localhost:3000/api/assessments/student/${studentId}/subject/${subjectId}?${params}`);
@@ -159,13 +171,21 @@ async function fetchAssessmentsByStudentAndSubject(studentId, subjectId, from = 
         
         const assessments = await response.json();
         let container = document.getElementById("assessments-container");
+        container.innerHTML = "";
+        
         console.log('Оценка:', assessments);
         let assessmentColorsClass = [undefined, undefined, "assessment-two", "assessment-three", "assessment-four", "assessment-five"]
         
         assessments.forEach(assessment => {
             let row = document.createElement("div");
             row.classList.add("assessments-content", "assessments-row");
-            row.id = assessment.id;
+
+
+            let deleteButton = document.createElement("div");
+            deleteButton.classList.add("assessment-delete-button");
+            deleteButton.addEventListener('click', (event) => {
+                deleteAssessment(assessment.id); // Вызываем функцию удаления
+            });
         
             let dateElementDiv = document.createElement("div");
             dateElementDiv.classList.add("assessments-content-element");
@@ -181,11 +201,21 @@ async function fetchAssessmentsByStudentAndSubject(studentId, subjectId, from = 
             assessmentDiv.textContent = assessment.Assessment;
             assessmentElementDiv.appendChild(assessmentDiv);
         
+            row.appendChild(deleteButton);
             row.appendChild(dateElementDiv);
             row.appendChild(assessmentElementDiv);
         
             container.appendChild(row);
         });
+
+        //Прокрутка скролла таблицы до конца
+        let panel = document.getElementById("assessments-assessment-panel");
+
+        panel.scrollTo({
+            top: panel.scrollHeight,
+            behavior: 'smooth'
+        });
+
 
     } catch (err) {
         console.error('Ошибка при получении оценок:', err.message);

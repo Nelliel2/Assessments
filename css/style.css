@@ -11,6 +11,10 @@ html{
     font-size: 1em;
 }
 
+body{
+    overflow: scroll;
+}
+
 input,
 select {
   width: 100%;
@@ -100,12 +104,15 @@ button:hover{
     flex-wrap: wrap;
     gap: 10px;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 10px;  
+}
+.assessments-captions{
     padding-left: 35px;
 }
-.assessments-row{
+.assessment-delete-button{
     background: url('/delete.png') no-repeat left; 
     background-size: 25px;
+    width: 25px;
 }
 .assessments-content-element{
     width: 40%;

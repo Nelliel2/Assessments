@@ -5,6 +5,7 @@ import {Student} from './models/student.js';
 import {Subject} from './models/subject.js'; 
 import {Group} from './models/group.js'; 
 import {Assessment} from './models/assessment.js'; 
+import {User} from './models/user.js'; 
 
 
 
@@ -34,6 +35,7 @@ app.use(bodyParser.json());
 
 // API для получения списка студентов
 app.get('/students', async (req, res) => {
+  console.log('Тело запроса:', req.body);
   try {
     const students = await Student.findAll();
     res.json(students);
@@ -42,11 +44,13 @@ app.get('/students', async (req, res) => {
   }
 });
 
+
 // API для добавления нового студента
 app.post('/students', async (req, res) => {
-  const { Name, Surname, Patronymic } = req.body;
+  console.log('Тело запроса:', req.body);
+  const { Name, Surname, Patronymic, GroupId } = req.body;  // добавляем GroupId
   try {
-    const student = await Student.create({ Name, Surname, Patronymic });
+    const student = await Student.create({ Name, Surname, Patronymic, GroupId });  // добавляем GroupId при создании
     res.status(201).json(student);
   } catch (err) {
     res.status(500).send(err.message);
@@ -56,7 +60,7 @@ app.post('/students', async (req, res) => {
 // API для обновления данных студента
 app.put('/students/:id', async (req, res) => {
   const { id } = req.params;
-  const { Name, Surname, Patronymic } = req.body;
+  const { Name, Surname, Patronymic, GroupId } = req.body;  // добавляем GroupId
   try {
     const student = await Student.findByPk(id);
     if (!student) {
@@ -65,6 +69,7 @@ app.put('/students/:id', async (req, res) => {
     student.Name = Name;
     student.Surname = Surname;
     student.Patronymic = Patronymic;
+    student.GroupId = GroupId;  // обновляем GroupId
     await student.save();
     res.status(200).json(student);
   } catch (err) {
@@ -346,9 +351,66 @@ app.get('/api/assessments/student/:studentId/subject/:subjectId', async (req, re
 });
 
 
+// API для добавления нового пользователя
+app.post('/users', async (req, res) => {
+  console.log('Тело запроса:', req.body);
+  const { Email, Password, StudentId, TeacherId } = req.body;
+
+  try {
+    const user = await User.create({ Email, Password, StudentId, TeacherId });
+    res.status(201).json(user);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// API для обновления данных пользователя
+app.put('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const { Email, Password, StudentId, TeacherId } = req.body;
+
+  try {
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    user.Email = Email;
+    user.Password = Password;
+    user.StudentId = StudentId;
+    user.TeacherId = TeacherId;
+    await user.save();
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
 
 
+// API для получения всех пользователей
+app.get('/users', async (req, res) => {
+  try {
+    const users = await User.findAll();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
 
+
+// API для получения пользователя по ID
+app.get('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
 
 
 

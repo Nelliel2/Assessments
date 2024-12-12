@@ -10,6 +10,22 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  StudentId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'Students', 
+      key: 'id'
+    }
+  },
+  TeacherId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'Teachers', 
+      key: 'id'
+    }
+  }
 });
 
 export { User };

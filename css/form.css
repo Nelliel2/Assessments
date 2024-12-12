@@ -83,3 +83,17 @@ hr {
   background-color: #f1f1f1;
   text-align: center;
 }
+
+.radio-container{
+  display: flex;
+  gap: 10px;
+
+  align-items: center;
+  margin: 5px 0 22px 0;
+}
+
+input[type="radio"] {
+  width: auto;
+  margin: 0;
+}
+

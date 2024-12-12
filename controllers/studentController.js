@@ -24,27 +24,28 @@ async function fetchStudents() {
 }
 
 // Функция для добавления нового студента
-async function addStudent() {
-    const Name = document.getElementById('Name').value;
-    const Surname = document.getElementById('Surname').value;
-    const Patronymic = document.getElementById('Patronymic').value; // Добавлено поле Patronymic
+async function addStudent(Name, Surname, Patronymic, GroupId) {
+
+
     if (!Name || !Surname) {
         alert('Please provide both Name and Surname');
         return;
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/students', {
+        const response = await fetch('http://localhost:3000/students', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ Name, Surname, Patronymic }) // Добавлено поле Patronymic
+            body: JSON.stringify({ Name: Name, Surname: Surname, Patronymic: Patronymic, GroupId: GroupId})  
         });
 
         if (!response.ok) {
             throw new Error('Failed to add student');
         }
+        const data = await response.json();
+        console.log(data);
 
     } catch (err) {
         console.error(err);
@@ -52,10 +53,11 @@ async function addStudent() {
     }
 }
 
+
 // Функция для удаления студента
 async function deleteStudent(id) {
     try {
-        const response = await fetch(`http://localhost:3000/api/students/${id}`, { // Исправлен синтаксис URL
+        const response = await fetch(`http://localhost:3000/students/${id}`, { // Исправлен синтаксис URL
             method: 'DELETE',
         });
 
@@ -73,20 +75,22 @@ async function deleteStudent(id) {
 // Функция для обновления данных студента
 async function updateStudent(id) {
     const Name = prompt("Enter new Name:");
-    const Surname = prompt("Enter new Surname:"); // Исправлено на prompt вместо parseFloat
-    const Patronymic = prompt("Enter new Patronymic:"); // Добавлено поле Patronymic
+    const Surname = prompt("Enter new Surname:");
+    const Patronymic = prompt("Enter new Patronymic:");
+    const GroupId = prompt("Enter new GroupId:");  // Добавлено поле GroupId
+
     if (!Name || !Surname) {
         alert('Please provide valid Name and Surname');
         return;
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/api/students/${id}`, { // Исправлен синтаксис URL
+        const response = await fetch(`http://localhost:3000/students/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ Name, Surname, Patronymic }) // Добавлено поле Patronymic
+            body: JSON.stringify({ Name, Surname, Patronymic, GroupId })  // Добавлено поле GroupId
         });
 
         if (!response.ok) {
@@ -99,6 +103,7 @@ async function updateStudent(id) {
         alert('Error updating student');
     }
 }
+
 
 
 // Функция для получения списка студентов

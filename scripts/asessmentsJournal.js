@@ -32,7 +32,7 @@ async function ready() {
         endDate.value = endPeriod2.toISOString().split('T')[0];
     }
 
-    
+
 
     await subjectController.fetchSubjects();
     await groupController.fetchGroups();
@@ -68,33 +68,35 @@ function updateSelectBox(id, options) {
 }
 
 function updateAssessmentTable() {
-    console.log("UpdateTable");
-    var table = document.getElementById('assessments-container');
-
-    table.innerHTML = "";
-
-
     let startDate = document.getElementById("start-period").value;
     let endDate = document.getElementById("end-period").value;
+    let studentId = document.getElementById("student-name-choice").value;
+    let subjectId = document.getElementById("subject-name-choice").value;
 
-    let assessmentColorsClass = [undefined, undefined, "assessment-two", "assessment-three", "assessment-four", "assessment-five"]
-
-
-    let studentId =  document.getElementById("student-name-choice").value;
-    let subjectId =  document.getElementById("subject-name-choice").value;
-    
     assessmentController.fetchAssessmentsByStudentAndSubject(studentId, subjectId, startDate, endDate, 'asc');
-
-    //newAssessment(5, new Date("2021-11-02"), assessmentColorsClass[5]);
 }
 
 async function newAssessment(assessmentValue) {
 
-    let studentId =  Number(document.getElementById("student-name-choice").value);
-    let subjectId =  Number(document.getElementById("subject-name-choice").value);
-    let asessmentDate = document.getElementById("asessment-date").value;
-    await assessmentController.addAssessment(studentId, subjectId, assessmentValue, asessmentDate);
-    updateAssessmentTable();
+    try {
+
+
+        let startDate = document.getElementById("start-period").value;
+        let endDate = document.getElementById("end-period").value;
+        let studentId = Number(document.getElementById("student-name-choice").value);
+        let subjectId = Number(document.getElementById("subject-name-choice").value);
+        let asessmentDate = document.getElementById("asessment-date").value;
+
+        if (asessmentDate < startDate || asessmentDate > endDate) {
+            throw new Error('Дата оценки вне периода. Измените дату или период проставления оценок');
+        }
+
+        await assessmentController.addAssessment(studentId, subjectId, assessmentValue, asessmentDate);
+        updateAssessmentTable();
+
+    } catch (err) {
+        alert(err);
+    }
 
 }
 
@@ -113,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const buttonTwo = document.getElementById('assessment-two');
     buttonTwo.addEventListener('click', () => newAssessment(2));
 
-    
+
     const updateTableButton = document.getElementById('button-update-assessment-table');
     updateTableButton.addEventListener('click', () => updateAssessmentTable());
 
@@ -124,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     document.querySelector("#student-name-choice").addEventListener('change', function (e) {
-        updateAssessmentTable();  
+        updateAssessmentTable();
     })
     document.querySelector("#subject-name-choice").addEventListener('change', function (e) {
         if (document.querySelector("#student-name-choice").value) {

@@ -19,7 +19,5 @@ const Teacher = sequelize.define('Teacher', {
 });
 
 Teacher.hasMany(StudyPlan);
-Teacher.hasMany(User);
-
 
 export { Teacher };
