@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 const SECRET_KEY = 'your-secret-key';
 
-export function authenticateToken(req, res, next) {
+function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
 
@@ -18,3 +18,5 @@ export function authenticateToken(req, res, next) {
     next();
   });
 }
+
+export { authenticateToken };

@@ -1,3 +1,5 @@
+const token = localStorage.getItem('token'); 
+
 // Функция для получения списка предметов
 async function fetchGroups() {
     try {
@@ -94,6 +96,30 @@ async function updateGroup(id) {
     }
 }
 
+
+async function fetchGroupById(groupId) {
+  try {
+    const response = await fetch(`http://localhost:3000/groups/${groupId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}` // 🟢 Отправляем токен в заголовке
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Ошибка при получении данных о группе');
+    }
+
+    const group = await response.json();
+    return group.Name;
+
+  } catch (error) {
+    console.error('Ошибка при запросе группы:', error);
+    alert('Ошибка при получении группы');
+  }
+}
+
+
 // Загружаем список предметов при загрузке страницы
 //window.onload = fetchGroups;
 
@@ -101,5 +127,6 @@ export default {
     updateGroup,
     deleteGroup,
     addGroup,
-    fetchGroups
+    fetchGroups,
+    fetchGroupById
 };

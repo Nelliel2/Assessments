@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { Op, sequelize } from './db_connection.js';
+import { Teacher } from './models/teacher.js';
 import { Student } from './models/student.js';
 import { Subject } from './models/subject.js';
 import { Group } from './models/group.js';
@@ -35,7 +36,63 @@ app.get('/', (req, res) => {
 
 app.use(bodyParser.json());
 
+// API для получения списка преподавателей
+app.get('/teachers', async (req, res) => {
+  console.log('Тело запроса:', req.body);
+  try {
+    const teachers = await Teacher.findAll();
+    res.json(teachers);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
 
+
+// API для добавления нового преподавателя
+app.post('/teachers', async (req, res) => {
+  console.log('Тело запроса:', req.body);
+  const { Name, Surname, Patronymic } = req.body;  
+  try {
+    const teacher = await Teacher.create({ Name, Surname, Patronymic });  
+    res.status(201).json({ id: teacher.id });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// API для обновления данных преподавателя
+app.put('/teachers/:id', async (req, res) => {
+  const { id } = req.params;
+  const { Name, Surname, Patronymic } = req.body;  
+  try {
+    const teacher = await Teacher.findByPk(id);
+    if (!teacher) {
+      return res.status(404).send('Teacher not found');
+    }
+    teacher.Name = Name;
+    teacher.Surname = Surname;
+    teacher.Patronymic = Patronymic;
+    await teacher.save();
+    res.status(200).json(teacher);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// API для удаления преподавателя
+app.delete('/teachers/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const teacher = await Teacher.findByPk(id);
+    if (!teacher) {
+      return res.status(404).send('Teacher not found');
+    }
+    await teacher.destroy();
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
 
 // API для получения списка студентов
 app.get('/students', async (req, res) => {
@@ -230,6 +287,23 @@ app.delete('/groups/:id', async (req, res) => {
   }
 });
 
+app.get('/groups/:id', authenticateToken, async (req, res) => {
+  const groupId = req.params.id;
+
+  try {
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+      return res.status(404).json({ message: 'Группа не найдена' });
+    }
+
+    res.status(200).json(group);
+  } catch (error) {
+    console.error('Ошибка при получении группы:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
+  }
+});
+
 
 // API для получения всех оценок
 app.get('/api/assessments', async (req, res) => {
@@ -265,7 +339,7 @@ app.get('/api/subjects/:subjectId/assessments', async (req, res) => {
 
 // API для добавления новой оценки
 app.post('/api/assessments', async (req, res) => {
-  console.log('Тело запроса:', req.body);
+  console.log('Тело запроса1:', req.body);
   const { StudentId, SubjectId, Assessment: assessmentValue, Date } = req.body;
   try {
     const newAssessment = await Assessment.create({
@@ -362,6 +436,12 @@ app.post('/users', async (req, res) => {
   const { Email, Password, StudentId, TeacherId } = req.body;
 
   try {
+    const existingUser = await User.findOne({ where: { Email } });
+
+    if (existingUser) {
+      return res.status(409).json({ error: 'Пользователь с таким Email уже существует' });
+    }
+
     const user = await User.create({ Email, Password, StudentId, TeacherId });
     res.status(201).json(user);
   } catch (err) {
@@ -372,17 +452,16 @@ app.post('/users', async (req, res) => {
 // API для обновления данных пользователя
 app.put('/users/:id', async (req, res) => {
   const { id } = req.params;
-  const { Email, Password, StudentId, TeacherId } = req.body;
+  const { Email, Password} = req.body;
 
   try {
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).send('User not found');
     }
+    
     user.Email = Email;
     user.Password = Password;
-    user.StudentId = StudentId;
-    user.TeacherId = TeacherId;
     await user.save();
     res.status(200).json(user);
   } catch (err) {
@@ -441,9 +520,11 @@ app.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid password' });
     }
 
+    const role = (user.StudentId) ? ("Student") : ("Teacher");
+
     // Генерируем JWT токен
     const token = jwt.sign(
-      { id: user.id, email: user.Email }, 
+      { id: user.id, email: user.Email, StudentId: user.StudentId, TeacherId: user.TeacherId, role: role}, 
       SECRET_KEY, 
       { expiresIn: '1h' } // Время жизни токена — 1 час
     );
@@ -460,6 +541,104 @@ app.post('/login', async (req, res) => {
 });
 
 
+
+
+
+app.get('/profile', authenticateToken, async (req, res) => {
+  try {
+    console.log('Данные пользователя из токена:', req.user); // Выводим все, что есть в req.user
+
+    const { id: userId, StudentId, TeacherId, email, role } = req.user;
+
+    let student = null;
+    let teacher = null;
+
+    // Проверяем роль пользователя
+    if (role === 'Student') {
+      if (!StudentId) {
+        return res.status(404).json({ message: 'Студент не связан с этим пользователем' });
+      }
+      student = await Student.findByPk(StudentId);
+      if (!student) {
+        return res.status(404).json({ message: 'Студент не найден' });
+      }
+    } else if (role === 'Teacher') {
+      if (!TeacherId) {
+        return res.status(404).json({ message: 'Учитель не связан с этим пользователем' });
+      }
+      teacher = await Teacher.findByPk(TeacherId);
+      if (!teacher) {
+        return res.status(404).json({ message: 'Учитель не найден' });
+      }
+    } else {
+      return res.status(400).json({ message: 'Неизвестная роль пользователя' });
+    }
+
+    res.json({
+      student,
+      teacher,
+      user: {
+        id: userId,
+        email: email,
+        role: role
+      }
+    });
+  } catch (err) {
+    console.error('Ошибка при получении профиля:', err);
+    res.status(500).json({ message: 'Ошибка при получении профиля' });
+  }
+});
+
+
+
+// API для проверки, существует ли пользователь с указанным Email
+app.post('/check-email', async (req, res) => {
+  const { Email } = req.body;
+
+  if (!Email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+
+  try {
+    // Проверяем, существует ли пользователь с таким Email
+    const existingUser = await User.findOne({ where: { Email } });
+
+    if (existingUser) {
+      return res.status(200).json({ exists: true, message: 'Email уже используется' });
+    }
+
+    res.status(200).json({ exists: false, message: 'Email свободен' });
+  } catch (err) {
+    console.error('Ошибка при проверке email:', err);
+    res.status(500).json({ error: 'Ошибка сервера при проверке email' });
+  }
+});
+
+
+// API для проверки введенного пароля
+app.post('/check-password/:id', async (req, res) => {
+
+  const { id } = req.params;
+  const { Password } = req.body;
+
+  try {
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    // Сравниваем введённый пароль с хэшированным паролем из базы
+    const isMatch = await bcrypt.compare(Password, user.Password);
+
+    if (!isMatch) {
+      return res.status(200).json({ valid: false, message: 'Неверный пароль' });
+    }
+
+    return res.status(200).json({ valid: true, message: 'Верный пароль' });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
 
 
 

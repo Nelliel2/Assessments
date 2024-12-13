@@ -1,4 +1,5 @@
 import studentController from '/studentController.js';
+import teacherController from '/teacherController.js';
 import userController from '/userController.js';
 import groupController from '/groupController.js';
 
@@ -61,20 +62,26 @@ toggleGroupContainer();
 
 regButton.addEventListener("click", validateInput);
 
+
 async function createUser() {
+  const selectedRole = document.querySelector('input[name="role"]:checked').value;
   const Name = document.getElementById('Name').value;
   const Surname = document.getElementById('Surname').value;
   const Patronymic = document.getElementById('Patronymic').value;
-  const GroupId = Number(document.getElementById('Group').value);
 
-  const StudentId = await studentController.addStudent(Name, Surname, Patronymic, GroupId);
-
-  console.log(StudentId);
 
   const Email = document.getElementById('Email').value;
   const Password = document.getElementById('Password').value;
 
-  userController.addUser(Email, Password, StudentId, null);
+  if (selectedRole === 'student') {
+    const GroupId = Number(document.getElementById('Group').value);
+    const StudentId = await studentController.addStudent(Name, Surname, Patronymic, GroupId);
+    userController.addUser(Email, Password, StudentId, null);
+  } else if (selectedRole === 'teacher') {
+    const TeacherId = await teacherController.addTeacher(Name, Surname, Patronymic);
+    userController.addUser(Email, Password, null, TeacherId);
+  }
+
   return '/login.html';
 }
 
@@ -86,3 +93,54 @@ regForm.addEventListener('submit', async function (event) {
   window.location.href = '/login.html';
 });
 
+
+
+
+
+
+const emailInput = document.getElementById('Email');
+
+const checkEmail = async function (input) {
+  const email = input.value;
+  input.setCustomValidity(``);
+  if (!email) {
+    emailError.style.display = 'none';
+    return;
+  }
+  try {
+    const response = await fetch('http://localhost:3000/check-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ Email: email })
+    });
+
+    const data = await response.json();
+
+    if (data.exists) {
+      input.setCustomValidity(`Этот Email уже используется.`);
+    }
+
+  } catch (err) {
+    console.error('Ошибка при проверке email:', err);
+    input.setCustomValidity(`Ошибка при проверке email.`);
+  }
+};
+
+emailInput.addEventListener("input", () => {
+  checkEmail(emailInput);
+});
+
+const validateEmailInput = () => {
+  emailInput.reportValidity();
+
+  let css = document.createElement('style');
+  css.textContent = 'input:invalid, select:invalid { border: rgb(221, 24, 24) solid 1px; }';
+  document.head.appendChild(css);
+
+  if (emailInput.validity.customError) {
+    // We can handle custom validity states here
+  } else {
+  }
+};
+
+regButton.addEventListener("click", validateEmailInput);

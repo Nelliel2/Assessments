@@ -16,13 +16,18 @@ async function addUser(Email, Password, StudentId, TeacherId) {
       body: JSON.stringify({ Email, Password, StudentId, TeacherId })
     });
 
+    
     if (!response.ok) {
-      throw new Error('Failed to add user');
+      if (response.status === 409) {
+        throw new Error('Пользователь с таким Email уже существует');
+      } else {
+        throw new Error('Failed to add user');
+      }
+      
     }
-
   } catch (err) {
     console.error(err);
-    alert('Error adding user');
+    alert(err);
   }
 }
 
@@ -30,8 +35,6 @@ async function addUser(Email, Password, StudentId, TeacherId) {
 async function updateUser(id) {
   const Email = document.getElementById('Email').value;
   const Password = document.getElementById('Password').value;
-  const StudentId = document.getElementById('StudentId').value;
-  const TeacherId = document.getElementById('TeacherId').value;
 
   if (!Email || !Password) {
     alert('Please provide both Email and Password');
