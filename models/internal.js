@@ -6,8 +6,6 @@ import {User} from './user.js';
 import {Subject} from './subject.js';
 import {StudyPlan} from './studyPlan.js';
 
-
-
 Group.hasMany(Student);
 
 Student.hasMany(User);
@@ -18,6 +16,7 @@ Subject.hasMany(Assessment);
 
 Subject.hasMany(StudyPlan);
 Group.hasMany(StudyPlan);
+Teacher.hasMany(StudyPlan);
 
 Student.belongsTo(Group, { foreignKey: 'GroupId' });
 
@@ -27,8 +26,9 @@ Assessment.belongsTo(Student, { foreignKey: 'StudentId' });
 User.belongsTo(Student, { foreignKey: 'StudentId' });
 User.belongsTo(Student, { foreignKey: 'TeacherId' });
 
+StudyPlan.belongsTo(Teacher, { foreignKey: 'TeacherId' });
 StudyPlan.belongsTo(Group, { foreignKey: 'GroupId' });
 StudyPlan.belongsTo(Subject, { foreignKey: 'SubjectId' });
 
 
-export { Group, Assessment, Student, User, Teacher, Subject};
+export { Group, Assessment, Student, User, Teacher, Subject, StudyPlan};

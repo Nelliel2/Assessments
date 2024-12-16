@@ -36,5 +36,11 @@ User.beforeCreate(async (user) => {
   user.setDataValue('Password', hashedPassword); // Используем setDataValue
 });
 
+User.beforeUpdate(async (user) => {
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(user.Password, salt);
+  user.setDataValue('Password', hashedPassword); // Используем setDataValue
+});
+
 
 export { User };

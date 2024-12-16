@@ -1,7 +1,5 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import {sequelize} from '../db_connection.js';
-import {StudyPlan} from './studyPlan.js';
-import {User} from './user.js';
 
 const Teacher = sequelize.define('Teacher', {
   Name: {
@@ -17,7 +15,5 @@ const Teacher = sequelize.define('Teacher', {
     allowNull: true,
   },
 });
-
-Teacher.hasMany(StudyPlan);
 
 export { Teacher };

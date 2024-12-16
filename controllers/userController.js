@@ -36,8 +36,8 @@ async function updateUser(id) {
   const Email = document.getElementById('Email').value;
   const Password = document.getElementById('Password').value;
 
-  if (!Email || !Password) {
-    alert('Please provide both Email and Password');
+  if (!Email && !Password) {
+    alert('Пожалуйста, укажите Email и пароль');
     return;
   }
 
@@ -47,17 +47,17 @@ async function updateUser(id) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ Email, Password, StudentId, TeacherId })
+      body: JSON.stringify({ Email, Password})
     });
 
     if (!response.ok) {
       throw new Error('Failed to update user');
     }
 
-    alert('User updated successfully');
+    alert('Данные успеспешно изменены');
   } catch (err) {
     console.error(err);
-    alert('Error updating user');
+    alert('Ошибка при обновлении данных пользователя');
   }
 }
 
@@ -77,7 +77,7 @@ async function getUsers() {
     });
   } catch (err) {
     console.error(err);
-    alert('Error fetching users');
+    alert('Ошибка при получении списка пользователей');
   }
 }
 
@@ -89,7 +89,7 @@ async function getUserById(id) {
     console.log(user);
   } catch (err) {
     console.error(err);
-    alert('Error fetching user');
+    alert('Ошибка при получении данных пользователя');
   }
 }
 

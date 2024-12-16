@@ -1,14 +1,28 @@
+import userController from '/userController.js';
+import teacherController from '/teacherController.js';
+import studentController from '/studentController.js';
 import groupController from '/groupController.js';
 
 const token = localStorage.getItem('token');
+const seqButton = document.getElementById("change-sequrety-button");
+const seqForm = document.getElementById("change-sequrety-form");
+const nameButton = document.getElementById("change-name-button");
+const nameForm = document.getElementById("change-name-form");
+
+const emailInput = document.getElementById('Email');
+const EmailName = document.getElementById('EmailName');
+const passwordOldInput = document.getElementById('Password-old');
+const passwordInput = document.getElementById("Password");
+const passwordRepeadInput = document.getElementById("Password-repead");
+let passwordError = '';
+let passwordRepeadError = '';
+
 if (!token) {
     // Перенаправляем на страницу входа, если токена нет
     window.location.href = '/login.html';
-}
+};
 
-let UserId = 0;
-
-async function getStudentProfile() {
+async function getUserProfile() {
     try {
         const response = await fetch('http://localhost:3000/profile', {
             method: 'GET',
@@ -24,30 +38,32 @@ async function getStudentProfile() {
 
         const data = await response.json();
         const user = data.user;
-        UserId = user.id;
+
+        localStorage.setItem('userId', user.id);
+        localStorage.setItem('userRole', user.role);
+        document.getElementById('EmailName').textContent = `Email: ${user.email}`;
+        document.getElementById('Email').value = `${user.email}`;
 
         if (user.role === "Student") {
             const student = data.student;
+            localStorage.setItem('studentId', student.id);
+            localStorage.setItem('groupId', student.GroupId);
+
             document.getElementById('FullName').textContent = `${student.Surname} ${student.Name} ${student.Patronymic}`;
             document.getElementById('GroupName').textContent = `Группа: ${await groupController.fetchGroupById(student.GroupId)}`;
             document.getElementById('Name').value = `${student.Name}`;
             document.getElementById('Surname').value = `${student.Surname}`;
-            document.getElementById('Patronymic').value = `${student.Patronymic}`;
-
-            document.getElementById('EmailName').textContent = `Email: ${user.email}`;
-            document.getElementById('Email').value = `${user.email}`;
+            document.getElementById('Patronymic').value = `${student.Patronymic}`;   
         } else {
             const teacher = data.teacher;
-            console.log(teacher);
+            localStorage.setItem('teacherId', teacher.id);
 
             document.getElementById('FullName').textContent = `${teacher.Surname} ${teacher.Name} ${teacher.Patronymic}`;
-            // document.getElementById('SubjectsName').textContent = `Передеметы: ${await subjectController.fetchSubjectsByTeacher(teacher.id)}`;
+            const subjects = await teacherController.getTeacherSubjects(teacher.id);
+            document.getElementById('SubjectsName').textContent = `Предметы: ${subjects.map((subject) => subject.name).join(', ')}`;
             document.getElementById('Name').value = `${teacher.Name}`;
             document.getElementById('Surname').value = `${teacher.Surname}`;
             document.getElementById('Patronymic').value = `${teacher.Patronymic}`;
-
-            document.getElementById('EmailName').textContent = `Email: ${user.email}`;
-            document.getElementById('Email').value = `${user.email}`;
         }
 
     } catch (err) {
@@ -58,7 +74,7 @@ async function getStudentProfile() {
     }
 }
 
-getStudentProfile();
+getUserProfile();
 
 document.addEventListener("DOMContentLoaded", ready);
 
@@ -70,10 +86,7 @@ async function ready() {
 }
 
 
-const seqButton = document.getElementById("change-sequrety-button");
 
-const emailInput = document.getElementById('Email');
-const EmailName = document.getElementById('EmailName');
 
 const checkEmail = async function (input) {
     const email = input.value;
@@ -123,8 +136,7 @@ const validateEmailInput = () => {
 seqButton.addEventListener("click", validateEmailInput);
 
 
-const passwordOldInput = document.getElementById('Password-old');
-let passwordError = '';
+
 
 const checkPassword = async function (input) {
     const password = input.value;
@@ -136,7 +148,7 @@ const checkPassword = async function (input) {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/check-password/${UserId}`, {
+        const response = await fetch(`http://localhost:3000/check-password/${localStorage.getItem("userId")}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ Password: password })
@@ -173,9 +185,7 @@ seqButton.addEventListener('click', (event) => {
     validatePasswordInput();
 });
 
-const passwordInput = document.getElementById("Password");
-const passwordRepeadInput = document.getElementById("Password-repead");
-let passwordRepeadError = '';
+
 
 const checkPasswordRepead = (input) => {
     input.setCustomValidity("");
@@ -200,6 +210,29 @@ const validatePasswordRepeadInput = () => {
     document.head.appendChild(css);
 };
 
+
 seqButton.addEventListener('click', (event) => {
     validatePasswordRepeadInput();
+});
+
+
+seqForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    await userController.updateUser(localStorage.getItem("userId"));
+
+    localStorage.removeItem('token');
+    window.location.href = '/login.html';
+});
+
+nameForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    if (localStorage.getItem("userRole") === "Student") {
+        await studentController.updateStudent(localStorage.getItem("studentId"));
+    } else if (localStorage.getItem("userRole") === "Teacher") {
+        await teacherController.updateTeacher(localStorage.getItem("teacherId"));
+    }
+
+    window.location.href = '/profile.html';
 });

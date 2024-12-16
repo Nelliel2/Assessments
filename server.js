@@ -1,12 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { Op, sequelize } from './db_connection.js';
-import { Teacher } from './models/teacher.js';
-import { Student } from './models/student.js';
-import { Subject } from './models/subject.js';
-import { Group } from './models/group.js';
-import { Assessment } from './models/assessment.js';
-import { User } from './models/user.js';
+import { Group, Assessment, Student, User, Teacher, Subject, StudyPlan } from './models/internal.js';
 
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
@@ -51,9 +46,9 @@ app.get('/teachers', async (req, res) => {
 // API для добавления нового преподавателя
 app.post('/teachers', async (req, res) => {
   console.log('Тело запроса:', req.body);
-  const { Name, Surname, Patronymic } = req.body;  
+  const { Name, Surname, Patronymic } = req.body;
   try {
-    const teacher = await Teacher.create({ Name, Surname, Patronymic });  
+    const teacher = await Teacher.create({ Name, Surname, Patronymic });
     res.status(201).json({ id: teacher.id });
   } catch (err) {
     res.status(500).send(err.message);
@@ -63,7 +58,7 @@ app.post('/teachers', async (req, res) => {
 // API для обновления данных преподавателя
 app.put('/teachers/:id', async (req, res) => {
   const { id } = req.params;
-  const { Name, Surname, Patronymic } = req.body;  
+  const { Name, Surname, Patronymic } = req.body;
   try {
     const teacher = await Teacher.findByPk(id);
     if (!teacher) {
@@ -94,6 +89,34 @@ app.delete('/teachers/:id', async (req, res) => {
   }
 });
 
+
+app.get('/teacher/:id/subjects', async (req, res) => {
+  const teacherId = req.params.id; 
+
+  try {
+    const subjects = await StudyPlan.findAll({
+      where: { TeacherId: teacherId },
+      include: [
+        {
+          model: Subject, 
+          attributes: ['id', 'Name'] 
+        }
+      ]
+    });
+
+    const result = subjects.map(record => ({
+      id: record.Subject.id,
+      name: record.Subject.Name
+    }));
+
+    res.json(result); 
+  } catch (err) {
+    console.error('Ошибка при получении предметов учителя:', err);
+    res.status(500).json({ message: 'Ошибка при получении предметов учителя' });
+  }
+});
+
+
 // API для получения списка студентов
 app.get('/students', async (req, res) => {
   console.log('Тело запроса:', req.body);
@@ -104,6 +127,32 @@ app.get('/students', async (req, res) => {
     res.status(500).send(err.message);
   }
 });
+
+// Получение студента по ID
+app.get('/student/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const student = await Student.findByPk(id, {
+      include: [
+        {
+          model: Group, 
+          attributes: ['id', 'Name'] 
+        }
+      ]
+    });
+
+    if (!student) {
+      return res.status(404).json({ message: 'Студент не найден' });
+    }
+
+    res.status(200).json(student);
+  } catch (err) {
+    console.error('Ошибка при получении студента:', err);
+    res.status(500).json({ message: 'Ошибка при получении студента' });
+  }
+});
+
 
 
 // API для добавления нового студента
@@ -121,7 +170,7 @@ app.post('/students', async (req, res) => {
 // API для обновления данных студента
 app.put('/students/:id', async (req, res) => {
   const { id } = req.params;
-  const { Name, Surname, Patronymic, GroupId } = req.body;  // добавляем GroupId
+  const { Name, Surname, Patronymic } = req.body;  
   try {
     const student = await Student.findByPk(id);
     if (!student) {
@@ -130,7 +179,6 @@ app.put('/students/:id', async (req, res) => {
     student.Name = Name;
     student.Surname = Surname;
     student.Patronymic = Patronymic;
-    student.GroupId = GroupId;  // обновляем GroupId
     await student.save();
     res.status(200).json(student);
   } catch (err) {
@@ -452,16 +500,16 @@ app.post('/users', async (req, res) => {
 // API для обновления данных пользователя
 app.put('/users/:id', async (req, res) => {
   const { id } = req.params;
-  const { Email, Password} = req.body;
+  const { Email, Password } = req.body;
 
   try {
     const user = await User.findByPk(id);
     if (!user) {
-      return res.status(404).send('User not found');
+      return res.status(404).send('Пользователь не найден.');
     }
-    
-    user.Email = Email;
-    user.Password = Password;
+
+    if (Email) { user.Email = Email; }
+    if (Password) { user.Password = Password; }
     await user.save();
     res.status(200).json(user);
   } catch (err) {
@@ -488,7 +536,7 @@ app.get('/users/:id', async (req, res) => {
   try {
     const user = await User.findByPk(id);
     if (!user) {
-      return res.status(404).send('User not found');
+      return res.status(404).send('Пользователь не найден.');
     }
     res.status(200).json(user);
   } catch (err) {
@@ -502,7 +550,7 @@ app.post('/login', async (req, res) => {
   const { Email, Password } = req.body;
 
   if (!Email || !Password) {
-    return res.status(400).json({ error: 'Email and Password are required' });
+    return res.status(400).json({ error: 'Не указан email или пароль.' });
   }
 
   try {
@@ -510,33 +558,33 @@ app.post('/login', async (req, res) => {
     const user = await User.findOne({ where: { Email } });
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: 'Пользователь не найден.' });
     }
 
     // Сравниваем введённый пароль с хэшированным паролем из базы
     const isMatch = await bcrypt.compare(Password, user.Password);
 
     if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid password' });
+      return res.status(401).json({ error: 'Неправильный пароль.' });
     }
 
     const role = (user.StudentId) ? ("Student") : ("Teacher");
 
     // Генерируем JWT токен
     const token = jwt.sign(
-      { id: user.id, email: user.Email, StudentId: user.StudentId, TeacherId: user.TeacherId, role: role}, 
-      SECRET_KEY, 
+      { id: user.id, email: user.Email, StudentId: user.StudentId, TeacherId: user.TeacherId, role: role },
+      SECRET_KEY,
       { expiresIn: '1h' } // Время жизни токена — 1 час
     );
 
-    res.status(200).json({ 
-      message: 'Login successful', 
-      token, 
-      user: { id: user.id, email: user.Email } // Не возвращаем пароль
+    res.status(200).json({
+      message: 'Успешный вход.',
+      token,
+      user: { id: user.id, email: user.Email } 
     });
   } catch (err) {
     console.error('Ошибка при авторизации:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Ошибка при авторизации' });
   }
 });
 

@@ -54,7 +54,7 @@
                 <label for="tab1" class="tab-title"><span class="tab-title-text">Безопасность</span></label>
 
                 <section class="tab-content">
-                    <form action="" class="form">
+                    <form action="" class="form" id="change-sequrety-form">
                         <h4>Изменить email</h4>
                         <label for="Email">Email</label>
                         <input type="email" id="Email" placeholder="Введите новый email" value="1@mail.ru">
@@ -82,13 +82,13 @@
                 <input type="radio" id="tab2" name="tab-group">
                 <label for="tab2" class="tab-title"><span class="tab-title-text">Данные</span></label>
                 <section class="tab-content">
-                    <form action="" class="form">
+                    <form action="" class="form" id="change-name-form">
                         <h4>Изменить основные сведения</h4>
-                        <label for="Name">Имя</label>
-                        <input type="text" id="Name" placeholder="Введите имя">
+                        <label for="Name">Имя<span class="required">*</span></label>
+                        <input type="text" id="Name" placeholder="Введите имя" required>
 
-                        <label for="Surname">Фамилия</label>
-                        <input type="text" id="Surname" placeholder="Введите фамилию">
+                        <label for="Surname">Фамилия<span class="required">*</span></label>
+                        <input type="text" id="Surname" placeholder="Введите фамилию" required>
 
                         <label for="Patronymic">Отчество</label>
                         <input type="text" id="Patronymic" placeholder="Введите отчество">

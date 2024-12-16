@@ -10,6 +10,7 @@ if (!token) {
     window.location.href = '/login.html';
 }
 
+
 async function ready() {
     document.getElementById('logout-menu-button').addEventListener('click', () => {
         localStorage.removeItem('token'); // Удаляем токен
@@ -40,21 +41,21 @@ async function ready() {
     }
 
 
-
     await subjectController.fetchSubjects();
-    await groupController.fetchGroups();
-    let GroupId = document.getElementById("Group").value;
-    await studentController.fetchStudentsByGroup(GroupId);
+
+    if (localStorage.getItem("userRole") === "Student") {
+        //Также заполняет группу студента
+        await studentController.getStudentById(localStorage.getItem("studentId"));
+        
+    } else if (localStorage.getItem("userRole") === "Teacher") {
+        await groupController.fetchGroups();
+        let GroupId = document.getElementById("group-name-choice").value;
+        await studentController.fetchStudentsByGroup(GroupId);
+    }
 
 
-    //updateAssessmentTable();
+    
 
-    //let studentsList = await studentController.getStudentsList();
-    //let subjectsList = await subjectController.getSubjectsList();
-    //let groupList = await groupController.getGroupsList();
-
-    //updateSelectBox("student-name-choice", studentsList);
-    //updateSelectBox("Group", groupList);
 }
 
 function updateAssessmentTable() {

@@ -17,6 +17,14 @@ const StudyPlan = sequelize.define('StudyPlan', {
             model: 'Subjects',
             key: 'id'
         }
+    },
+    TeacherId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Teachers',
+        key: 'id'
+      }
     }
 });
 

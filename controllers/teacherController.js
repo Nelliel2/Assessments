@@ -1,7 +1,7 @@
 // Функция для получения списка преподавателей
 async function fetchTeachers() {
     try {
-        const response = await fetch('http://localhost:3000/api/teachers'); 
+        const response = await fetch('http://localhost:3000/api/teachers');
         if (!response.ok) {
             throw new Error('Failed to fetch teachers');
         }
@@ -21,6 +21,45 @@ async function fetchTeachers() {
     }
 }
 
+
+// Функция для получения списка предметов преподавателя
+async function getTeacherSubjects(id) {
+    try {
+        const response = await fetch(`http://localhost:3000/teacher/${id}/subjects`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}` // Если токен нужен для авторизации
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Ошибка при получении списка предметов');
+        }
+
+        const subjects = await response.json();
+
+        const select = document.getElementById('subject-name-choice');
+        if (select) {
+            select.innerHTML = '';  // Очищаем список
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.innerHTML = subject.Name;
+                option.value = subject.id;
+                select.appendChild(option);
+            });
+        }
+
+        return subjects;
+
+
+    } catch (err) {
+        console.error('Ошибка при загрузке предметов:', err);
+        alert('Ошибка при загрузке предметов. Попробуйте позже.');
+    }
+}
+
+
 // Функция для добавления нового преподавателя
 async function addTeacher(Name, Surname, Patronymic) {
 
@@ -36,7 +75,7 @@ async function addTeacher(Name, Surname, Patronymic) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ Name: Name, Surname: Surname, Patronymic: Patronymic})  
+            body: JSON.stringify({ Name: Name, Surname: Surname, Patronymic: Patronymic })
         });
 
         if (!response.ok) {
@@ -71,12 +110,12 @@ async function deleteTeacher(id) {
 
 // Функция для обновления данных преподавателя
 async function updateTeacher(id) {
-    const Name = prompt("Enter new Name:");
-    const Surname = prompt("Enter new Surname:");
-    const Patronymic = prompt("Enter new Patronymic:");
+    const Name = document.getElementById("Name").value;
+    const Surname = document.getElementById("Surname").value;
+    const Patronymic = document.getElementById("Patronymic").value;
 
     if (!Name || !Surname) {
-        alert('Please provide valid Name and Surname');
+        alert('Пожалуйста, укажите имя и фамилию.');
         return;
     }
 
@@ -86,17 +125,16 @@ async function updateTeacher(id) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ Name, Surname, Patronymic })  
+            body: JSON.stringify({ Name, Surname, Patronymic })
         });
 
         if (!response.ok) {
-            throw new Error('Failed to update teacher');
+            throw new Error('Ошибка при изменении данных преподавателя.');
         }
 
-        fetchTeachers();  // Обновляем список преподавателей
     } catch (err) {
         console.error(err);
-        alert('Error updating teacher');
+        alert('Ошибка при изменении данных преподавателя.');
     }
 }
 
@@ -106,4 +144,5 @@ export default {
     deleteTeacher,
     addTeacher,
     fetchTeachers,
+    getTeacherSubjects
 };
