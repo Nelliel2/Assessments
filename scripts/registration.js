@@ -82,7 +82,7 @@ async function createUser() {
     userController.addUser(Email, Password, null, TeacherId);
   }
 
-  return '/login.html';
+  return '/login';
 }
 
 regForm.addEventListener('submit', async function (event) {
@@ -90,7 +90,7 @@ regForm.addEventListener('submit', async function (event) {
 
   regForm.action = await createUser();
 
-  window.location.href = '/login.html';
+  window.location.href = '/login';
 });
 
 

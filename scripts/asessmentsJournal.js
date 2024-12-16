@@ -1,27 +1,26 @@
 'use strict';
 //import studentController from '../controllers/studentController.js';
 import studentController from '/studentController.js';
+import teacherController from '/teacherController.js';
 import subjectController from '/subjectController.js';
 import groupController from '/groupController.js';
 import assessmentController from '/assessmentController.js';
 
 const token = localStorage.getItem('token');
+
 if (!token) {
-    window.location.href = '/login.html';
+    window.location.href = '/login';
 }
 
+const teacherId = localStorage.getItem("teacherId");
 
 async function ready() {
     document.getElementById('logout-menu-button').addEventListener('click', () => {
         localStorage.removeItem('token'); // Удаляем токен
-        window.location.href = '/login.html'; // Перенаправляем на страницу входа
+        window.location.href = '/login'; // Перенаправляем на страницу входа
     });
 
     let currDate = new Date();
-    let assessmentsDate = document.getElementById("asessment-date");
-    console.dir(assessmentsDate);
-    assessmentsDate.value = currDate.toISOString().split('T')[0];
-
     let currYear = currDate.getFullYear();
 
     let startPeriod1 = new Date(Date.UTC(currYear, 8, 1));
@@ -40,22 +39,21 @@ async function ready() {
         endDate.value = endPeriod2.toISOString().split('T')[0];
     }
 
-
-    await subjectController.fetchSubjects();
-
     if (localStorage.getItem("userRole") === "Student") {
-        //Также заполняет группу студента
+        //getStudentById также заполняет и группу студента
         await studentController.getStudentById(localStorage.getItem("studentId"));
-        
+        const groupId = document.getElementById("group-name-choice").value;
+        await groupController.getSubjectsByGroupId(groupId);
+
     } else if (localStorage.getItem("userRole") === "Teacher") {
+        await teacherController.getTeacherSubjects(teacherId);
         await groupController.fetchGroups();
         let GroupId = document.getElementById("group-name-choice").value;
         await studentController.fetchStudentsByGroup(GroupId);
+
+        let assessmentsDate = document.getElementById("asessment-date");
+        assessmentsDate.value = currDate.toISOString().split('T')[0];
     }
-
-
-    
-
 }
 
 function updateAssessmentTable() {
@@ -68,10 +66,7 @@ function updateAssessmentTable() {
 }
 
 async function newAssessment(assessmentValue) {
-
     try {
-
-
         let startDate = document.getElementById("start-period").value;
         let endDate = document.getElementById("end-period").value;
         let studentId = Number(document.getElementById("student-name-choice").value);
@@ -88,44 +83,44 @@ async function newAssessment(assessmentValue) {
     } catch (err) {
         alert(err);
     }
-
 }
 
 document.addEventListener("DOMContentLoaded", ready);
 
 document.addEventListener('DOMContentLoaded', () => {
-    const buttonFive = document.getElementById('assessment-five');
-    buttonFive.addEventListener('click', () => newAssessment(5));
-
-    const buttonFour = document.getElementById('assessment-four');
-    buttonFour.addEventListener('click', () => newAssessment(4));
-
-    const buttonThree = document.getElementById('assessment-three');
-    buttonThree.addEventListener('click', () => newAssessment(3));
-
-    const buttonTwo = document.getElementById('assessment-two');
-    buttonTwo.addEventListener('click', () => newAssessment(2));
-
-
     const updateTableButton = document.getElementById('button-update-assessment-table');
     updateTableButton.addEventListener('click', () => updateAssessmentTable());
 
-    document.querySelector("#Group").addEventListener('change', function (e) {
-        studentController.fetchStudentsByGroup(e.target.value);
-        var table = document.getElementById('assessments-container');
-        table.innerHTML = "";
-    })
+    if (localStorage.getItem("userRole") === "Teacher") {
+        const buttonFive = document.getElementById('assessment-five');
+        buttonFive.addEventListener('click', () => newAssessment(5));
 
-    document.querySelector("#student-name-choice").addEventListener('change', function (e) {
-        updateAssessmentTable();
-    })
-    document.querySelector("#subject-name-choice").addEventListener('change', function (e) {
-        if (document.querySelector("#student-name-choice").value) {
+        const buttonFour = document.getElementById('assessment-four');
+        buttonFour.addEventListener('click', () => newAssessment(4));
+
+        const buttonThree = document.getElementById('assessment-three');
+        buttonThree.addEventListener('click', () => newAssessment(3));
+
+        const buttonTwo = document.getElementById('assessment-two');
+        buttonTwo.addEventListener('click', () => newAssessment(2));
+
+        document.querySelector("#group-name-choice").addEventListener('change', function (e) {
+            studentController.fetchStudentsByGroup(e.target.value);
+            var table = document.getElementById('assessments-container');
+            table.innerHTML = "";
+        })
+
+        document.querySelector("#student-name-choice").addEventListener('change', function (e) {
             updateAssessmentTable();
-        }
-    })
+        })
+        document.querySelector("#subject-name-choice").addEventListener('change', function (e) {
+            if (document.querySelector("#student-name-choice").value) {
+                updateAssessmentTable();
+            }
+        })
 
-
+    }
 });
+
 
 

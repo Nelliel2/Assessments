@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/form.css">
+    <link rel="stylesheet" href="/profile.css">
+    <script src="/profile.js" type="module"></script>
+</head>
+
+<body>
+    <div data-id="posts"></div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="site-name">
+                <h2>Оценки</h2>
+            </div>
+            <nav class="menu">
+                <ul class="header-menu">
+                    <li class="main-menu-element">
+                        <a href="assessmentsJournal" id="assessments-menu-button">Оценки</a>
+                    </li>
+                    <li class="main-menu-element">
+                        <a href="profile" id="profile-menu-button">Мой профиль</a>
+                    </li>
+                    <li>
+                        |
+                    </li>
+                    <li class="main-menu-element main-menu-element-enter">
+                        <a href="login" id="logout-menu-button">Выйти</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div id="profile-form" class="profile-container">
+        <div class="form-header">
+            <div class="form-header-text">
+                <h1 id="FullName"></h1>
+                <p id="SubjectsName"></p>
+                <p id="GroupName"></p>
+                <p id="EmailName"></p>
+            </div>
+            <hr>
+        </div>
+        <div class="tabs">
+            <div class="tab">
+                <input type="radio" id="tab1" name="tab-group" checked>
+                <label for="tab1" class="tab-title"><span class="tab-title-text">Безопасность</span></label>
+
+                <section class="tab-content">
+                    <form action="" class="form" id="change-sequrety-form">
+                        <h4>Изменить email</h4>
+                        <label for="Email">Email</label>
+                        <input type="email" id="Email" placeholder="Введите новый email" value="1@mail.ru">
+
+                        <h4>Изменить пароль</h4>
+                        <label for="Password">Пароль</label>
+                        <input type="password" id="Password-old" placeholder="Введите пароль">
+
+                        <label for="Password">Новый пароль</label>
+                        <input type="password" id="Password" placeholder="Введите новый пароль">
+
+                        <label for="Password">Повторите пароль</label>
+                        <input type="password" id="Password-repead" placeholder="Повторите пароль">
+
+
+                        <button type="submit" class="button" id="change-sequrety-button">Изменить</button>
+                        <hr>
+                        <div class="container signin">
+                            <p>По всем вопросам обращайтесь на почту: aaa@mail.ru</p>
+                        </div>
+                    </form>
+                </section>
+            </div>
+            <div class="tab">
+                <input type="radio" id="tab2" name="tab-group">
+                <label for="tab2" class="tab-title"><span class="tab-title-text">Данные</span></label>
+                <section class="tab-content">
+                    <form action="" class="form" id="change-name-form">
+                        <h4>Изменить основные сведения</h4>
+                        <label for="Name">Имя<span class="required">*</span></label>
+                        <input type="text" id="Name" placeholder="Введите имя" required>
+
+                        <label for="Surname">Фамилия<span class="required">*</span></label>
+                        <input type="text" id="Surname" placeholder="Введите фамилию" required>
+
+                        <label for="Patronymic">Отчество</label>
+                        <input type="text" id="Patronymic" placeholder="Введите отчество">
+
+                        <button type="submit" class="button" id="change-name-button">Изменить</button>
+                        <hr>
+                        <div class="container signin">
+                            <p>По всем вопросам обращайтесь на почту: aaa@mail.ru</p>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

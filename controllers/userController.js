@@ -112,7 +112,7 @@ async function loginUser(email, password) {
     console.log('Токен:', data.token);
     console.log('Информация о пользователе:', data.user);
 
-    window.location.href = '/profile.html'; // Перенаправляем на страницу профиля
+     // Перенаправляем на страницу профиля
   } catch (err) {
     console.error('Ошибка при авторизации:', err);
     alert('Ошибка при авторизации: ' + err.message);

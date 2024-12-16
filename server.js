@@ -2,12 +2,13 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { Op, sequelize } from './db_connection.js';
 import { Group, Assessment, Student, User, Teacher, Subject, StudyPlan } from './models/internal.js';
-
+import session from 'express-session';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { authenticateToken } from './middleware/auth.js';
 
 import path from 'path';
+
 
 
 const SECRET_KEY = 'your-secret-key';
@@ -23,13 +24,93 @@ app.use(express.static(path.join(__dirname, 'css')));
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static(path.join(__dirname, 'modules')));
 app.use(express.static(path.join(__dirname, 'img')));
+app.set('view engine', 'ejs'); // Устанавливаем EJS как шаблонизатор
+app.set('views', path.join(__dirname, 'views')); // Устанавливаем папку views для шаблонов
 
 // Отдаём HTML-файл по запросу
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html')); // Путь к файлу
+  res.render(path.join(__dirname, 'views', 'index')); // Путь к файлу
 });
 
 app.use(bodyParser.json());
+
+app.use(session({
+  secret: 'your-secret-key', // Храните этот ключ в .env файле
+  resave: false,
+  saveUninitialized: true
+}));
+
+app.get('/assessmentsJournal', (req, res) => {
+  const role = req.session.role; // Получаем роль из сессии
+  if (!role) {
+    return res.status(403).json({ message: 'Access denied. No role found in session.' });
+  }
+  res.render('assessmentsJournal', { role }); // Передаём роль в шаблон
+});
+
+app.get('/index', (req, res) => {
+  res.render('index'); 
+});
+
+app.get('/login', (req, res) => {
+  res.render('login'); 
+});
+
+
+app.get('/registration', (req, res) => {
+  res.render('registration'); 
+});
+
+app.get('/profile', (req, res) => {
+  res.render('profile'); 
+});
+
+
+app.get('/setDataToToken', authenticateToken, async (req, res) => {
+  try {
+    console.log('Данные пользователя из токена:', req.user); // Выводим все, что есть в req.user
+
+    const { id: userId, StudentId, TeacherId, email, role } = req.user;
+
+    let student = null;
+    let teacher = null;
+
+    // Проверяем роль пользователя
+    if (role === 'Student') {
+      if (!StudentId) {
+        return res.status(404).json({ message: 'Студент не связан с этим пользователем' });
+      }
+      student = await Student.findByPk(StudentId);
+      if (!student) {
+        return res.status(404).json({ message: 'Студент не найден' });
+      }
+    } else if (role === 'Teacher') {
+      if (!TeacherId) {
+        return res.status(404).json({ message: 'Учитель не связан с этим пользователем' });
+      }
+      teacher = await Teacher.findByPk(TeacherId);
+      if (!teacher) {
+        return res.status(404).json({ message: 'Учитель не найден' });
+      }
+    } else {
+      return res.status(400).json({ message: 'Неизвестная роль пользователя' });
+    }
+
+    res.json({
+      student,
+      teacher,
+      user: {
+        id: userId,
+        email: email,
+        role: role
+      }
+    });
+    
+  } catch (err) {
+    console.error('Ошибка при получении профиля:', err);
+    res.status(500).json({ message: 'Ошибка при получении профиля' });
+  }
+});
 
 // API для получения списка преподавателей
 app.get('/teachers', async (req, res) => {
@@ -291,6 +372,35 @@ app.get('/groups', async (req, res) => {
     res.status(500).send(err.message);
   }
 });
+
+// Получение предметов по ID группы
+app.get('/group/:id/subjects', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const subjects = await StudyPlan.findAll({
+      where: { GroupId: id },
+      include: [
+        {
+          model: Subject, 
+          attributes: ['id', 'Name'] 
+        }
+      ]
+    });
+
+    if (!subjects.length) {
+      return res.status(404).json({ message: 'Предметы для данной группы не найдены' });
+    }
+
+    const subjectList = subjects.map(subject => subject.Subject);
+
+    res.status(200).json(subjectList);
+  } catch (err) {
+    console.error('Ошибка при получении предметов по группе:', err);
+    res.status(500).json({ message: 'Ошибка при получении предметов по группе' });
+  }
+});
+
 
 // API для добавления нового предмета
 app.post('/groups', async (req, res) => {
@@ -577,11 +687,13 @@ app.post('/login', async (req, res) => {
       { expiresIn: '1h' } // Время жизни токена — 1 час
     );
 
+     req.session.role = role;
     res.status(200).json({
       message: 'Успешный вход.',
       token,
       user: { id: user.id, email: user.Email } 
     });
+    
   } catch (err) {
     console.error('Ошибка при авторизации:', err);
     res.status(500).json({ error: 'Ошибка при авторизации' });
@@ -591,51 +703,6 @@ app.post('/login', async (req, res) => {
 
 
 
-
-app.get('/profile', authenticateToken, async (req, res) => {
-  try {
-    console.log('Данные пользователя из токена:', req.user); // Выводим все, что есть в req.user
-
-    const { id: userId, StudentId, TeacherId, email, role } = req.user;
-
-    let student = null;
-    let teacher = null;
-
-    // Проверяем роль пользователя
-    if (role === 'Student') {
-      if (!StudentId) {
-        return res.status(404).json({ message: 'Студент не связан с этим пользователем' });
-      }
-      student = await Student.findByPk(StudentId);
-      if (!student) {
-        return res.status(404).json({ message: 'Студент не найден' });
-      }
-    } else if (role === 'Teacher') {
-      if (!TeacherId) {
-        return res.status(404).json({ message: 'Учитель не связан с этим пользователем' });
-      }
-      teacher = await Teacher.findByPk(TeacherId);
-      if (!teacher) {
-        return res.status(404).json({ message: 'Учитель не найден' });
-      }
-    } else {
-      return res.status(400).json({ message: 'Неизвестная роль пользователя' });
-    }
-
-    res.json({
-      student,
-      teacher,
-      user: {
-        id: userId,
-        email: email,
-        role: role
-      }
-    });
-  } catch (err) {
-    console.error('Ошибка при получении профиля:', err);
-    res.status(500).json({ message: 'Ошибка при получении профиля' });
-  }
-});
 
 
 

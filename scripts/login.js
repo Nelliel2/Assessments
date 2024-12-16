@@ -10,7 +10,7 @@ async function login() {
 
     await userController.loginUser(Email, Password);
 
-    return '/profile.html';
+    return '/profile';
 }
 
 
@@ -18,4 +18,6 @@ logForm.addEventListener('submit', async function (event) {
     event.preventDefault();
 
     logForm.action = await login();
+
+    window.location.href = '/profile';
 });

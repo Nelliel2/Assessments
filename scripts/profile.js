@@ -19,12 +19,14 @@ let passwordRepeadError = '';
 
 if (!token) {
     // Перенаправляем на страницу входа, если токена нет
-    window.location.href = '/login.html';
+    window.location.href = '/login';
 };
+
+
 
 async function getUserProfile() {
     try {
-        const response = await fetch('http://localhost:3000/profile', {
+        const response = await fetch('http://localhost:3000/setDataToToken', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -53,7 +55,7 @@ async function getUserProfile() {
             document.getElementById('GroupName').textContent = `Группа: ${await groupController.fetchGroupById(student.GroupId)}`;
             document.getElementById('Name').value = `${student.Name}`;
             document.getElementById('Surname').value = `${student.Surname}`;
-            document.getElementById('Patronymic').value = `${student.Patronymic}`;   
+            document.getElementById('Patronymic').value = `${student.Patronymic}`;
         } else {
             const teacher = data.teacher;
             localStorage.setItem('teacherId', teacher.id);
@@ -70,7 +72,7 @@ async function getUserProfile() {
         console.error('Ошибка при загрузке профиля:', err);
         alert('Ошибка при загрузке профиля. Войдите снова.');
         localStorage.removeItem('token');
-        window.location.href = '/login.html';
+        window.location.href = '/login';
     }
 }
 
@@ -81,7 +83,7 @@ document.addEventListener("DOMContentLoaded", ready);
 async function ready() {
     document.getElementById('logout-menu-button').addEventListener('click', () => {
         localStorage.removeItem('token'); // Удаляем токен
-        window.location.href = '/login.html'; // Перенаправляем на страницу входа
+        window.location.href = '/login'; // Перенаправляем на страницу входа
     });
 }
 
@@ -222,7 +224,7 @@ seqForm.addEventListener('submit', async function (event) {
     await userController.updateUser(localStorage.getItem("userId"));
 
     localStorage.removeItem('token');
-    window.location.href = '/login.html';
+    window.location.href = '/login';
 });
 
 nameForm.addEventListener('submit', async function (event) {
@@ -234,5 +236,5 @@ nameForm.addEventListener('submit', async function (event) {
         await teacherController.updateTeacher(localStorage.getItem("teacherId"));
     }
 
-    window.location.href = '/profile.html';
+    window.location.href = '/profile';
 });
