@@ -91,3 +91,10 @@ h4 {
 .tab :checked~.tab-content {
     display: block;
 }
+
+@media (max-width: 500px){
+    .tab-title {
+        width: 100%;
+    }
+    
+}

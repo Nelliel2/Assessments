@@ -1,0 +1,185 @@
+
+.assessments-main-panel {
+    display: flex;
+    flex-wrap: wrap-reverse;
+}
+
+.assessments-period-panel {
+    display: flex;
+    flex-wrap: wrap;
+    white-space: nowrap;
+    align-items: center;
+    gap: 10px;
+    margin: 30px auto;
+}
+
+.assessments-assessment-panel {
+    max-height: 60vh;
+    overflow-y: auto;
+    margin: 30px 0px;
+}
+
+.assessments-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.assessments-captions {
+    padding-left: 35px;
+}
+
+.assessment-delete-button {
+    background: url('/delete.png') no-repeat left;
+    background-size: 25px;
+    width: 25px;
+}
+
+.assessments-content-element {
+    width: 40%;
+}
+
+.assessments-date {
+    width: min-content;
+    padding: 5px 10px;
+    background-color: #609BFF;
+    color: white;
+    border-radius: 30px;
+}
+
+.assessments-assessment {
+    width: min-content;
+    padding: 5px 10px;
+    background-color: #609BFF;
+    color: white;
+    border-radius: 30px;
+}
+
+
+.assessments-right-panel {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+    padding: 5% 0px 0px 5%;
+}
+
+.assessments-right-panel input, select {
+    min-width: 100%;
+}
+
+.assesment-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.asessments-choice {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 10px;
+    margin: 10px 20px;
+    list-style-type: none;
+    justify-content: center;
+}
+
+.assessments-assessment-choice {
+    padding: 5%;
+}
+
+.select-box {
+    font-size: 1em;
+}
+
+.input-date {
+    font-size: 1.15em;
+    max-width: 133px;
+}
+
+.show-button {
+    cursor: pointer;
+    width: min-content;
+    padding: 5px 10px;
+    background-color: #609BFF;
+    color: white;
+    user-select: none;
+}
+
+.assessment-button {
+    cursor: pointer;
+    width: max-content;
+    /* padding: 5px 10px; */
+    background-color: #609BFF;
+    color: white;
+    user-select: none;
+    font-size: 24px;
+    padding: 5px 12px;
+}
+
+.button-update-assessment-table {
+    margin-left: 10px;
+
+    border-radius: 5px;
+}
+
+#button-update-assessment-table {
+    padding: 10px;
+}
+
+
+.assessment-button:hover {
+    background-color: black;
+}
+
+.assessment-two {
+    background-color: #EB5757;
+}
+
+.assessment-three {
+    background-color: #F2994A;
+}
+
+.assessment-four {
+    background-color: #609BFF;
+}
+
+.assessment-five {
+    background-color: #27AE60;
+}
+
+#subject-name-choice {
+    font-size: 2em;
+    font-weight: bold;
+    width: max-content;
+    appearance: none;
+    background: url('/arrowList.svg') no-repeat left;
+    background-size: 25px;
+    padding: 0px 25px 4px 35px;
+}
+
+#subject-name-choice option {
+    font-size: 16px;
+}
+
+#subject-name-choice:focus {
+    outline: 0;
+}
+
+.period {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.perid-container{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

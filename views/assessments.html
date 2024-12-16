@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site</title>
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/assessmentsPage.css">
     <script src="/studentController.js" type="module"></script>
     <script src="/subjectController.js" type="module"></script>
     <script src="/groupController.js" type="module"></script>
@@ -39,7 +40,7 @@
             </nav>
         </div>
     </header>
-    <div class="assessments">
+    <div class="assessments body">
         <div class="assessments-header">
             <div class="curr-subject">
                 <select name="subject" id="subject-name-choice" class="select-box">
@@ -50,18 +51,23 @@
         <div class="assessments-main-panel">
             <div class="assessments-left-panel">
                 <div class="assessments-period-panel">
-                    <label for="start-period">Период с</label>
-                    <input type="date" id="start-period" name="trip-start" value="2018-07-22" min="2000-01-01"
-                        class="input-date" />
-
-                    <label for="end-period">до</label>
-                    <input type="date" id="end-period" name="trip-end" value="2018-07-22" min="2000-01-01"
-                        class="input-date" />
-
+                    <div class="period">
+                        <div class="period-from perid-container">
+                            <label for="start-period">Период с</label>
+                            <input type="date" id="start-period" name="trip-start" value="2018-07-22" min="2000-01-01"
+                                class="input-date" />
+                        </div>
+                        <div class="period-to perid-container">
+                            <label for="end-period">до</label>
+                            <input type="date" id="end-period" name="trip-end" value="2018-07-22" min="2000-01-01"
+                                class="input-date" />
+                        </div>
+                    </div>
                     <div class="show-button button-update-assessment-table">
                         <span id="button-update-assessment-table">Показать</span>
-
                     </div>
+
+
                 </div>
 
                 <div class="assessments-assessment-panel" id="assessments-assessment-panel">
@@ -95,7 +101,8 @@
                     <ul id="asessments-choice" class="asessments-choice">
                         <li id="assessment-five" class="assessments-assessment assessment-button assessment-five">5</li>
                         <li id="assessment-four" class="assessments-assessment assessment-button assessment-four">4</li>
-                        <li id="assessment-three" class="assessments-assessment assessment-button assessment-three">3</li>
+                        <li id="assessment-three" class="assessments-assessment assessment-button assessment-three">3
+                        </li>
                         <li id="assessment-two" class="assessments-assessment assessment-button assessment-two">2</li>
                     </ul>
                 </div>
