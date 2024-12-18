@@ -152,6 +152,7 @@ async function fetchAssessmentsByStudentAndSubject(studentId, subjectId, from = 
         let avgAssessment = document.getElementById("avg-assessment");
         avgText.textContent = "";
         avgAssessment.textContent = "";
+        avgAssessment.classList.value = '';
 
         const params = new URLSearchParams();
         if (from) params.append('startDate', from);

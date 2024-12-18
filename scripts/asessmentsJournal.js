@@ -87,6 +87,18 @@ async function newAssessment(assessmentValue) {
     }
 }
 
+
+const avgText = document.getElementById("avg-assessment-text");
+const avgAssessment = document.getElementById("avg-assessment");
+const container = document.getElementById("assessments-container");
+
+function clearTableContent() {
+    avgText.textContent = "";
+    avgAssessment.textContent = "";
+    avgAssessment.classList.value = '';
+    container.innerHTML = "";
+}
+
 document.addEventListener("DOMContentLoaded", ready);
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -107,14 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
         buttonTwo.addEventListener('click', () => newAssessment(2));
 
         document.querySelector("#group-name-choice").addEventListener('change', function (e) {
-            let avgText = document.getElementById("avg-assessment-text");
-            let avgAssessment = document.getElementById("avg-assessment");
-            avgText.textContent = "";
-            avgAssessment.textContent = "";
+            clearTableContent();
     
             studentController.fetchStudentsByGroup(e.target.value);
-            var table = document.getElementById('assessments-container');
-            table.innerHTML = "";
+
         })
 
         document.querySelector("#student-name-choice").addEventListener('change', function (e) {
@@ -122,11 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
             updateAssessmentTable();
         })
         document.querySelector("#subject-name-choice").addEventListener('change', function (e) {
-            let avgText = document.getElementById("avg-assessment-text");
-            let avgAssessment = document.getElementById("avg-assessment");
-            avgText.textContent = "";
-            avgAssessment.textContent = "";
-    
+            clearTableContent();
+
             groupController.getGroupsBySubjectId(e.target.value);
             studentController.fetchStudentsByGroup(e.target.value);
 
