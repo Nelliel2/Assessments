@@ -154,11 +154,44 @@ async function getSubjectsByGroupId(groupId) {
     }
 }
 
+async function getGroupsBySubjectId(id) {
+    try {
+        const response = await fetch(`http://localhost:3000/subject/${id}/groups`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}` // Если требуется токен
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Ошибка при получении групп по предмету');
+        }
+
+        const groups = await response.json();
+        const select = document.getElementById('group-name-choice');
+        if (select) {
+            select.innerHTML = '';  // Очищаем список
+            groups.forEach(group => {
+                const option = document.createElement('option');
+                option.innerHTML = group.Name;
+                option.value = group.id;
+                select.appendChild(option);
+            });
+        }
+
+    } catch (err) {
+        console.error('Ошибка при загрузке групп по предмету:', err);
+        alert('Ошибка при загрузке групп. Попробуйте позже.');
+    }
+}
+
 export default {
     updateGroup,
     deleteGroup,
     addGroup,
     fetchGroups,
     fetchGroupById,
-    getSubjectsByGroupId
+    getSubjectsByGroupId,
+    getGroupsBySubjectId
 };

@@ -147,6 +147,12 @@ async function fetchAssessmentsBySubject(subjectId) {
 // Функция для получения оценок ученика по предмету с фильтрацией и сортировкой
 async function fetchAssessmentsByStudentAndSubject(studentId, subjectId, from = null, to = null, sort = 'asc') {
     try {
+
+        let avgText = document.getElementById("avg-assessment-text");
+        let avgAssessment = document.getElementById("avg-assessment");
+        avgText.textContent = "";
+        avgAssessment.textContent = "";
+
         const params = new URLSearchParams();
         if (from) params.append('startDate', from);
         if (to) {
@@ -173,7 +179,8 @@ async function fetchAssessmentsByStudentAndSubject(studentId, subjectId, from = 
         container.innerHTML = "";
         
         console.log('Оценка:', assessments);
-        let assessmentColorsClass = [undefined, undefined, "assessment-two", "assessment-three", "assessment-four", "assessment-five"]
+        let assessmentColorsClass = [undefined, undefined, "assessment-two", "assessment-three", "assessment-four", "assessment-five"];
+        let sum = 0;
         
         assessments.forEach(assessment => {
             let row = document.createElement("div");
@@ -199,13 +206,24 @@ async function fetchAssessmentsByStudentAndSubject(studentId, subjectId, from = 
             assessmentDiv.classList.add("assessments-assessment", assessmentColorsClass[assessment.Assessment]);
             assessmentDiv.textContent = assessment.Assessment;
             assessmentElementDiv.appendChild(assessmentDiv);
-        
+
+            sum += assessment.Assessment;
+
             row.appendChild(deleteButton);
             row.appendChild(dateElementDiv);
             row.appendChild(assessmentElementDiv);
-        
+
             container.appendChild(row);
         });
+
+        
+        let avg = assessments.length !=0 ? (sum / assessments.length).toFixed(2) : '';
+        if (avg) {
+            avgText.textContent = "Средняя оценка за период: ";
+            avgAssessment.textContent = avg;
+            avgAssessment.classList.value = '';
+            avgAssessment.classList.add("assessments-assessment", assessmentColorsClass[Math.round(avg)]);
+        }     
 
         //Прокрутка скролла таблицы до конца
         let panel = document.getElementById("assessments-assessment-panel");

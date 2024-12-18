@@ -362,8 +362,39 @@ app.delete('/subjects/:id', async (req, res) => {
 });
 
 
+// Получение групп, у которых есть указанный предмет
+app.get('/subject/:id/groups', async (req, res) => {
+  try {
+    const { id } = req.params;
 
-// API для получения списка предметов
+    // Поиск групп, которые связаны с указанным предметом через StudyPlan
+    const groups = await StudyPlan.findAll({
+      where: { SubjectId: id },
+      include: [
+        {
+          model: Group, // Связываем с моделью Group
+          attributes: ['id', 'Name'] // Указываем, какие поля нужны
+        }
+      ]
+    });
+
+    if (!groups.length) {
+      return res.status(404).json({ message: 'Группы для данного предмета не найдены' });
+    }
+
+    // Формируем массив только с группами (убираем лишние поля StudyPlan)
+    const groupList = groups.map(group => group.Group);
+
+    res.status(200).json(groupList);
+  } catch (err) {
+    console.error('Ошибка при получении групп по предмету:', err);
+    res.status(500).json({ message: 'Ошибка при получении групп по предмету' });
+  }
+});
+
+
+
+// API для получения списка групп
 app.get('/groups', async (req, res) => {
   try {
     const groups = await Group.findAll();
@@ -402,7 +433,7 @@ app.get('/group/:id/subjects', async (req, res) => {
 });
 
 
-// API для добавления нового предмета
+// API для добавления новой группы
 app.post('/groups', async (req, res) => {
   const { Name } = req.body;
   try {
@@ -413,7 +444,7 @@ app.post('/groups', async (req, res) => {
   }
 });
 
-// API для обновления данных предмета
+// API для обновления данных группы
 app.put('/groups/:id', async (req, res) => {
   const { id } = req.params;
   const { Name } = req.body;

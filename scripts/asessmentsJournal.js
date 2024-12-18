@@ -47,9 +47,11 @@ async function ready() {
 
     } else if (localStorage.getItem("userRole") === "Teacher") {
         await teacherController.getTeacherSubjects(teacherId);
-        await groupController.fetchGroups();
-        let GroupId = document.getElementById("group-name-choice").value;
-        await studentController.fetchStudentsByGroup(GroupId);
+        const subjectId = document.getElementById("subject-name-choice").value;
+        await groupController.getGroupsBySubjectId(subjectId);
+        const groupId = document.getElementById("group-name-choice").value;
+        await studentController.fetchStudentsByGroup(groupId);
+        
 
         let assessmentsDate = document.getElementById("asessment-date");
         assessmentsDate.value = currDate.toISOString().split('T')[0];
@@ -105,17 +107,31 @@ document.addEventListener('DOMContentLoaded', () => {
         buttonTwo.addEventListener('click', () => newAssessment(2));
 
         document.querySelector("#group-name-choice").addEventListener('change', function (e) {
+            let avgText = document.getElementById("avg-assessment-text");
+            let avgAssessment = document.getElementById("avg-assessment");
+            avgText.textContent = "";
+            avgAssessment.textContent = "";
+    
             studentController.fetchStudentsByGroup(e.target.value);
             var table = document.getElementById('assessments-container');
             table.innerHTML = "";
         })
 
         document.querySelector("#student-name-choice").addEventListener('change', function (e) {
+            
             updateAssessmentTable();
         })
         document.querySelector("#subject-name-choice").addEventListener('change', function (e) {
+            let avgText = document.getElementById("avg-assessment-text");
+            let avgAssessment = document.getElementById("avg-assessment");
+            avgText.textContent = "";
+            avgAssessment.textContent = "";
+    
+            groupController.getGroupsBySubjectId(e.target.value);
+            studentController.fetchStudentsByGroup(e.target.value);
+
             if (document.querySelector("#student-name-choice").value) {
-                updateAssessmentTable();
+                updateAssessmentTable(); 
             }
         })
 
