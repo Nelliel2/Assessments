@@ -36,7 +36,7 @@ const validateInput = () => {
 
 const radioButtons = document.getElementsByName('role');
 const groupContainer = document.getElementById('group-container');
-const groupSelect = document.getElementById('Group');
+const groupSelect = document.getElementById('group-name-choice');
 
 function toggleGroupContainer() {
   const selectedRole = document.querySelector('input[name="role"]:checked').value;
@@ -74,7 +74,7 @@ async function createUser() {
   const Password = document.getElementById('Password').value;
 
   if (selectedRole === 'student') {
-    const GroupId = Number(document.getElementById('Group').value);
+    const GroupId = Number(document.getElementById('group-name-choice').value);
     const StudentId = await studentController.addStudent(Name, Surname, Patronymic, GroupId);
     userController.addUser(Email, Password, StudentId, null);
   } else if (selectedRole === 'teacher') {

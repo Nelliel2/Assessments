@@ -112,10 +112,13 @@ async function loginUser(email, password) {
     console.log('Токен:', data.token);
     console.log('Информация о пользователе:', data.user);
 
+    return true;
+
      // Перенаправляем на страницу профиля
   } catch (err) {
     console.error('Ошибка при авторизации:', err);
     alert('Ошибка при авторизации: ' + err.message);
+    return false;
   }
 }
 

@@ -5,19 +5,21 @@ const logForm = document.getElementById("login-form");
 
 
 async function login() {
-    let Email = document.getElementById("Email").value;
-    let Password = document.getElementById("Password").value;
+    const Email = document.getElementById("Email").value;
+    const Password = document.getElementById("Password").value;
 
-    await userController.loginUser(Email, Password);
+    const result = await userController.loginUser(Email, Password);
 
-    return '/profile';
+    return result;
 }
 
 
 logForm.addEventListener('submit', async function (event) {
     event.preventDefault();
 
-    logForm.action = await login();
-
-    window.location.href = '/profile';
+    const result = await login()
+    if (result)  {
+        window.location.href = '/profile';
+    }
+    
 });
