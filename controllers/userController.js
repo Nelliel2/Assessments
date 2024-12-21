@@ -123,7 +123,6 @@ async function loginUser(email, password) {
 }
 
 
-
 export default {
   addUser,
   updateUser,

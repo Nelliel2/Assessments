@@ -2,6 +2,7 @@ import userController from '/userController.js';
 import teacherController from '/teacherController.js';
 import studentController from '/studentController.js';
 import groupController from '/groupController.js';
+import subjectController from '/subjectController.js';
 
 const token = localStorage.getItem('token');
 const seqButton = document.getElementById("change-sequrety-button");
@@ -17,12 +18,15 @@ const passwordRepeadInput = document.getElementById("Password-repead");
 let passwordError = '';
 let passwordRepeadError = '';
 
+
 if (!token) {
     // Перенаправляем на страницу входа, если токена нет
     window.location.href = '/login';
 };
 
-
+Array.prototype.random = function () {
+    return this[Math.floor((Math.random() * this.length))];
+}
 
 async function getUserProfile() {
     try {
@@ -61,16 +65,25 @@ async function getUserProfile() {
             localStorage.setItem('teacherId', teacher.id);
 
             document.getElementById('FullName').textContent = `${teacher.Surname} ${teacher.Name} ${teacher.Patronymic}`;
-            const subjects = await teacherController.getTeacherSubjects(teacher.id);
-            const subjectsArray = subjects.map((subject) => subject.name);
-            subjects.forEach(subject => {
-                console.log(subject.name);
-            });
-            document.getElementById('SubjectsName');
-
+     
             document.getElementById('Name').value = `${teacher.Name}`;
             document.getElementById('Surname').value = `${teacher.Surname}`;
             document.getElementById('Patronymic').value = `${teacher.Patronymic}`;
+ 
+            document.getElementById('add-subject-form').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                
+                const groupId =  document.getElementById('group-without-subject-choice').value;
+                const subjectId =  document.getElementById('Subject').value;
+                const teacherId = localStorage.getItem("teacherId");
+
+                await groupController.addSubjectToGroup(groupId, subjectId, teacherId);
+
+                await groupController.getGroupsWithoutSubject(subjectId);
+
+                await updateTeacherSubjects();
+            });
+
         }
 
     } catch (err) {
@@ -79,6 +92,40 @@ async function getUserProfile() {
         localStorage.removeItem('token');
         window.location.href = '/login';
     }
+}
+
+async function updateTeacherSubjects () {
+    const teacherId = localStorage.getItem("teacherId");
+    const subjects = await teacherController.getTeacherSubjects(teacherId);
+
+    const colorsClass = ["color-two", "color-three", "color-four", "color-five"];
+    const subjectsContainer = document.getElementById('SubjectsName');
+    subjectsContainer.innerHTML = "";
+    subjects.forEach(async subject => {
+
+        let row = document.createElement("div");
+        row.classList.add("subject");
+        row.classList.add(colorsClass.random());
+
+        let deleteButton = document.createElement("div");
+        deleteButton.classList.add("subject-delete-button");
+        deleteButton.addEventListener('click', (event) => {
+            //deleteAssessment(assessment.id); // Вызываем функцию удаления
+        });
+
+        let subjectDiv = document.createElement("div");
+        let groupList = await groupController.fetchGroupsBySubject(subject.id);
+
+        subjectDiv.classList.add("text-subject");
+        subjectDiv.textContent = `${subject.Name} (${groupList.map(i => i.Name).join(", ")})`;
+
+
+        row.appendChild(deleteButton);
+        row.appendChild(subjectDiv);
+
+        subjectsContainer.appendChild(row);
+    });
+
 }
 
 getUserProfile();
@@ -90,6 +137,17 @@ async function ready() {
         localStorage.removeItem('token'); // Удаляем токен
         window.location.href = '/login'; // Перенаправляем на страницу входа
     });
+
+    if (document.getElementById('Subject')) {
+        document.getElementById('Subject').addEventListener('change', function (e) {
+            let selectedSubjectId = document.getElementById('Subject').value;
+            groupController.getGroupsWithoutSubject(selectedSubjectId);
+        })
+    }
+
+    if (localStorage.getItem("userRole") === "Teacher") {
+        await updateTeacherSubjects();
+    }
 }
 
 
@@ -203,6 +261,7 @@ const checkPasswordRepead = (input) => {
 
     }
 };
+
 
 passwordRepeadInput.addEventListener("input", () => {
     checkPasswordRepead(passwordRepeadInput);

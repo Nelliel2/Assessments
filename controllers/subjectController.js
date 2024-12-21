@@ -7,14 +7,16 @@ async function fetchSubjects() {
             throw new Error('Failed to fetch subjects');
         }
         const subjects = await response.json();
-        const select = document.getElementById('subject-name-choice');
-        select.innerHTML = '';  // Очищаем список
-        subjects.forEach(subject => {
-            const option = document.createElement('option');
-            option.innerHTML = subject.Name;
-            option.value = subject.id;
-            select.appendChild(option);
-        });
+        const select = document.getElementById('Subject');
+        if (select) {
+            select.innerHTML = '';  // Очищаем список
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.innerHTML = subject.Name;
+                option.value = subject.id;
+                select.appendChild(option);
+            });
+        }
     } catch (err) {
         console.error(err);
         alert('Error fetching subjects');

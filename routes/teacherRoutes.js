@@ -1,5 +1,7 @@
 import express from 'express';
 import { Teacher, StudyPlan, Subject } from '../models/internal.js';
+import { sequelize } from '../db_connection.js';
+import { Op } from 'sequelize';
 
 const router = express.Router();
 
@@ -188,19 +190,23 @@ router.get('/teacher/:id/subjects', async (req, res) => {
   const teacherId = req.params.id;
 
   try {
-    const subjects = await StudyPlan.findAll({
-      where: { TeacherId: teacherId },
-      include: [
-        {
-          model: Subject,
-          attributes: ['id', 'Name']
+    const subjects = await Subject.findAll({
+      attributes: ['id', 'Name'],
+      where: {
+        id: {
+          [Op.in]: sequelize.Sequelize.literal(`(
+            SELECT DISTINCT "SubjectId"
+            FROM "StudyPlans"
+            WHERE "TeacherId" = ${teacherId}
+          )`)
         }
-      ]
+      },
+      order: [['Name', 'ASC']]
     });
-
+    
     const result = subjects.map(record => ({
-      id: record.Subject.id,
-      name: record.Subject.Name
+      id: record.id,
+      Name: record.Name
     }));
 
     res.json(result);

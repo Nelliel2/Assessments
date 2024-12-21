@@ -186,6 +186,95 @@ async function getGroupsBySubjectId(id) {
     }
 }
 
+// Функция для получения групп без указанного предмета
+async function getGroupsWithoutSubject(subjectId) {
+    if (!subjectId) {
+        alert('Please provide a valid subject ID');
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/groups/without-subject/${subjectId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch groups without the subject');
+        }
+
+        const groups = await response.json(); // Получаем список групп
+        const select = document.getElementById('group-without-subject-choice');
+        if (select) {
+            select.innerHTML = '';  // Очищаем список
+            groups.forEach(group => {
+                const option = document.createElement('option');
+                option.innerHTML = group.Name;
+                option.value = group.id;
+                select.appendChild(option);
+            });
+        }
+        
+
+    } catch (err) {
+        console.error(err);
+        alert('Error fetching groups without the subject');
+    }
+}
+
+async function addSubjectToGroup(groupId, subjectId, teacherId) {
+    try {
+        // Формируем URL для API запроса
+        const url = `http://localhost:3000/api/groups/${groupId}/subjects/${subjectId}/teacher/${teacherId}`;
+
+        // Отправляем POST запрос на сервер для добавления предмета
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        // Проверяем, был ли запрос успешным
+        if (!response.ok) {
+            throw new Error('Failed to add subject to group');
+        }
+
+        // Получаем данные о созданной записи
+        const data = await response.json();
+
+        // Выводим результат или обновляем UI
+        console.log('Subject added to group:', data);
+        alert('Subject successfully added to group');
+
+        // Если нужно, обновим список предметов или другие данные на странице
+        // Например:
+        // fetchStudyPlans(); // Функция для обновления списка предметов
+
+    } catch (err) {
+        console.error('Error adding subject to group:', err);
+        alert('Error adding subject to group');
+    }
+}
+
+async function fetchGroupsBySubject(subjectId) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/groups/subject/${subjectId}`);
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch groups');
+        }
+
+        const groups = await response.json();
+
+        // Выводим список групп в консоль
+        console.log('Groups:', groups);
+
+        return groups;
+    } catch (err) {
+        console.error('Error fetching groups:', err);
+        alert('Error fetching groups');
+    }
+}
+
+
+
 export default {
     updateGroup,
     deleteGroup,
@@ -193,5 +282,8 @@ export default {
     fetchGroups,
     fetchGroupById,
     getSubjectsByGroupId,
-    getGroupsBySubjectId
+    getGroupsBySubjectId,
+    getGroupsWithoutSubject,
+    addSubjectToGroup,
+    fetchGroupsBySubject
 };

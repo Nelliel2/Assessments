@@ -42,7 +42,7 @@
         <div class="form-header">
             <div class="form-header-text">
                 <h1 id="FullName"></h1>
-                <p id="SubjectsName"></p>
+                <p id="SubjectsName" class="subjectsContainer"></p>
                 <p id="GroupName"></p>
                 <p id="EmailName"></p>
             </div>
@@ -106,18 +106,41 @@
                     <input type="radio" id="tab3" name="tab-group">
                     <label for="tab3" class="tab-title"><span class="tab-title-text">Предметы</span></label>
                     <section class="tab-content">
-                        <form action="" class="form" id="change-subject-form">
-                            <h4>Текущие предметы</h4>
-
-                            <h4>Добавить предметы</h4>
-                            <div class="group-container" id="group-container">
-                                <label for="group-name-choice">Группа<span class="required">*</span></label>
-                                <select name="group" id="group-name-choice" class="group select-box" required>
-                                    <option value="" disabled selected class="disabled-selection" hidden>Выберите вашу
-                                        группу</option>
+                        <form action="" class="form" id="add-subject-form">
+                            <h4>Добавить свой предмет группе</h4>
+                            <div class="subject-container" id="subject-container">
+                                <label for="Subject">Предмет<span class="required">*</span></label>
+                                <select name="subject" id="Subject" class="select-box" required>
+                                    <option value="" disabled selected class="disabled-selection" hidden>Выберите предмет</option>
                                 </select>
                             </div>
-                            <button type="submit" class="button" id="change-name-button">Добавить</button>
+                            <div class="group-container" id="group-container">
+                                <label for="group-without-subject-choice">Группа<span class="required">*</span></label>
+                                <select name="group" id="group-without-subject-choice" class="group select-box" required>
+                                    <option value="" disabled selected class="disabled-selection" hidden>Выберите группу</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="button" id="add-subject-button">Добавить</button>
+                            <hr>
+                            <div class="container signin">
+                                <p>По всем вопросам обращайтесь на почту: aaa@mail.ru</p>
+                            </div>
+                        </form>
+                        <form action="" class="form" id="delete-subject-form">
+                            <h4>Добавить свой предмет группе</h4>
+                            <div class="subject-container" id="subject-container">
+                                <label for="Subject">Предмет<span class="required">*</span></label>
+                                <select name="subject" id="Subject" class="select-box" required>
+                                    <option value="" disabled selected class="disabled-selection" hidden>Выберите предмет</option>
+                                </select>
+                            </div>
+                            <div class="group-container" id="group-container">
+                                <label for="group-with-subject-choice">Группа<span class="required">*</span></label>
+                                <select name="group" id="group-with-subject-choice" class="group select-box" required>
+                                    <option value="" disabled selected class="disabled-selection" hidden>Выберите группу</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="button" id="add-subject-button">Добавить</button>
                             <hr>
                             <div class="container signin">
                                 <p>По всем вопросам обращайтесь на почту: aaa@mail.ru</p>
