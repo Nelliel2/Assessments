@@ -107,7 +107,7 @@
                     <label for="tab3" class="tab-title"><span class="tab-title-text">Предметы</span></label>
                     <section class="tab-content">
                         <form action="" class="form" id="add-subject-form">
-                            <h4>Добавить свой предмет группе</h4>
+                            <h4>Добавить предмет группе</h4>
                             <div class="subject-container" id="subject-container">
                                 <label for="Subject">Предмет<span class="required">*</span></label>
                                 <select name="subject" id="Subject" class="select-box" required>
@@ -121,16 +121,12 @@
                                 </select>
                             </div>
                             <button type="submit" class="button" id="add-subject-button">Добавить</button>
-                            <hr>
-                            <div class="container signin">
-                                <p>По всем вопросам обращайтесь на почту: aaa@mail.ru</p>
-                            </div>
                         </form>
                         <form action="" class="form" id="delete-subject-form">
-                            <h4>Добавить свой предмет группе</h4>
+                            <h4>Убрать предмет у группы</h4>
                             <div class="subject-container" id="subject-container">
-                                <label for="Subject">Предмет<span class="required">*</span></label>
-                                <select name="subject" id="Subject" class="select-box" required>
+                                <label for="subject">Предмет<span class="required">*</span></label>
+                                <select name="Subject" id="subject" class="select-box" required>
                                     <option value="" disabled selected class="disabled-selection" hidden>Выберите предмет</option>
                                 </select>
                             </div>
@@ -140,12 +136,13 @@
                                     <option value="" disabled selected class="disabled-selection" hidden>Выберите группу</option>
                                 </select>
                             </div>
-                            <button type="submit" class="button" id="add-subject-button">Добавить</button>
-                            <hr>
-                            <div class="container signin">
-                                <p>По всем вопросам обращайтесь на почту: aaa@mail.ru</p>
-                            </div>
+                            <button type="submit" class="button" id="delete-subject-button">Убрать</button>
+
                         </form>
+                        <hr>
+                        <div class="container signin">
+                            <p>По всем вопросам обращайтесь на почту: aaa@mail.ru</p>
+                        </div>
                     </section>
                 </div>
             <% } %>

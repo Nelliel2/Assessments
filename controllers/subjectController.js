@@ -4,10 +4,30 @@ async function fetchSubjects() {
     try {
         const response = await fetch('http://localhost:3000/api/subjects');
         if (!response.ok) {
+            
+            let select = document.getElementById('Subject');
+            if (select) {
+                select.innerHTML = '';
+            }
+            select = document.getElementById('subject');
+            if (select) {
+                select.innerHTML = '';
+            }
             throw new Error('Failed to fetch subjects');
         }
         const subjects = await response.json();
-        const select = document.getElementById('Subject');
+        let select = document.getElementById('Subject');
+        if (select) {
+            select.innerHTML = '';  // Очищаем список
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.innerHTML = subject.Name;
+                option.value = subject.id;
+                select.appendChild(option);
+            });
+        }
+
+        select = document.getElementById('subject');
         if (select) {
             select.innerHTML = '';  // Очищаем список
             subjects.forEach(subject => {

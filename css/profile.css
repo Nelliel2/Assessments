@@ -100,13 +100,12 @@ h4 {
 
 .subject {
     width: max-content;
-    padding: 5px 5px;
-    margin: auto 10px;
+    padding: 5px 15px;
+    margin: 5px 10px;
     color: white;
     border-radius: 30px;
     display: flex;
     flex-wrap: wrap;
-    
 }
 
 .subject-delete-button {
@@ -115,9 +114,6 @@ h4 {
     width: 25px;
 }
 
-.text-subject {
-    padding-right: 15px;
-}
 
 
 @media (max-width: 780px){
@@ -151,3 +147,4 @@ h4 {
 .color-five {
     background-color: #27AE60;
 }
+

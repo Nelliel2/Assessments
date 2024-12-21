@@ -8,7 +8,8 @@ async function fetchGroups() {
             throw new Error('Failed to fetch groups');
         }
         const groups = await response.json();
-        const select = document.getElementById('group-name-choice');
+
+        let select = document.getElementById('group-name-choice');
         if (select) {
             select.innerHTML = '';  // Очищаем список
             groups.forEach(group => {
@@ -18,6 +19,19 @@ async function fetchGroups() {
                 select.appendChild(option);
             });
         }
+
+        select = document.getElementById('Group');
+        if (select) {
+            select.innerHTML = '';  // Очищаем список
+            groups.forEach(group => {
+                const option = document.createElement('option');
+                option.innerHTML = group.Name;
+                option.value = group.id;
+                select.appendChild(option);
+            });
+        }
+
+
     } catch (err) {
         console.error(err);
         alert('Error fetching groups');
@@ -189,7 +203,7 @@ async function getGroupsBySubjectId(id) {
 // Функция для получения групп без указанного предмета
 async function getGroupsWithoutSubject(subjectId) {
     if (!subjectId) {
-        alert('Please provide a valid subject ID');
+        console.log('Please provide a valid subject ID');
         return;
     }
 
@@ -220,10 +234,8 @@ async function getGroupsWithoutSubject(subjectId) {
 
 async function addSubjectToGroup(groupId, subjectId, teacherId) {
     try {
-        // Формируем URL для API запроса
         const url = `http://localhost:3000/api/groups/${groupId}/subjects/${subjectId}/teacher/${teacherId}`;
 
-        // Отправляем POST запрос на сервер для добавления предмета
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -231,21 +243,11 @@ async function addSubjectToGroup(groupId, subjectId, teacherId) {
             },
         });
 
-        // Проверяем, был ли запрос успешным
         if (!response.ok) {
             throw new Error('Failed to add subject to group');
         }
 
-        // Получаем данные о созданной записи
         const data = await response.json();
-
-        // Выводим результат или обновляем UI
-        console.log('Subject added to group:', data);
-        alert('Subject successfully added to group');
-
-        // Если нужно, обновим список предметов или другие данные на странице
-        // Например:
-        // fetchStudyPlans(); // Функция для обновления списка предметов
 
     } catch (err) {
         console.error('Error adding subject to group:', err);
@@ -253,23 +255,59 @@ async function addSubjectToGroup(groupId, subjectId, teacherId) {
     }
 }
 
+
+async function deleteSubjectFromGroup(groupId, subjectId, teacherId) {
+    try {
+        const url = `http://localhost:3000/api/groups/${groupId}/subjects/${subjectId}/teacher/${teacherId}`;
+
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to add subject to group');
+        }
+
+    } catch (err) {
+        console.error('Error adding subject to group:', err);
+        alert('Error adding subject to group');
+    }
+}
+
+
+
 async function fetchGroupsBySubject(subjectId) {
     try {
         const response = await fetch(`http://localhost:3000/api/groups/subject/${subjectId}`);
         
         if (!response.ok) {
-            throw new Error('Failed to fetch groups');
+            const select = document.getElementById('group-with-subject-choice');
+            if (select) {
+                select.innerHTML = '';
+            }
+            console.error('Failed to fetch groups');
+            return;
         }
 
         const groups = await response.json();
 
-        // Выводим список групп в консоль
-        console.log('Groups:', groups);
+        const select = document.getElementById('group-with-subject-choice');
+        if (select) {
+            select.innerHTML = '';  // Очищаем список
+            groups.forEach(group => {
+                const option = document.createElement('option');
+                option.innerHTML = group.Name;
+                option.value = group.id;
+                select.appendChild(option);
+            });
+        }
 
         return groups;
     } catch (err) {
         console.error('Error fetching groups:', err);
-        alert('Error fetching groups');
     }
 }
 
@@ -285,5 +323,6 @@ export default {
     getGroupsBySubjectId,
     getGroupsWithoutSubject,
     addSubjectToGroup,
+    deleteSubjectFromGroup,
     fetchGroupsBySubject
 };

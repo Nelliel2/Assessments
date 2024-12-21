@@ -302,7 +302,7 @@ router.get('/groups/without-subject/:subjectId', async (req, res) => {
  * @swagger
  * /groups/{groupId}/subjects/{subjectId}/teacher/{teacherId}:
  *   post:
- *     summary: Добавление предмета группе с выбранным преподавателем
+ *     summary: Добавить предмет в учебный план
  *     tags: [StudyPlans]
  *     parameters:
  *       - in: path
@@ -373,6 +373,64 @@ router.post('/groups/:groupId/subjects/:subjectId/teacher/:teacherId', async (re
   } catch (err) {
     console.error('Ошибка при добавлении предмета группе:', err);
     res.status(500).json({ message: 'Ошибка при добавлении предмета группе' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/groups/{groupId}/subjects/{subjectId}/teacher/{teacherId}:
+ *   delete:
+ *     summary: Удалить предмет из учебного плана
+ *     tags: [StudyPlans]
+ *     description: Удаляет предмет из учебного плана по ID группы, предмета и преподавателя
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID группы
+ *       - in: path
+ *         name: subjectId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID предмета
+ *       - in: path
+ *         name: teacherId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID преподавателя
+ *     responses:
+ *       200:
+ *         description: Успешно удалено
+ *       404:
+ *         description: Запись не найдена
+ *       500:
+ *         description: Ошибка сервера
+ */
+router.delete('/groups/:groupId/subjects/:subjectId/teacher/:teacherId', async (req, res) => {
+  const { groupId, subjectId, teacherId } = req.params;
+
+  try {
+      const studyPlan = await StudyPlan.findOne({
+          where: {
+              GroupId: groupId,
+              SubjectId: subjectId,
+              TeacherId: teacherId
+          }
+      });
+
+      if (!studyPlan) {
+          return res.status(404).json({ message: 'Запись не найдена' });
+      }
+
+      await studyPlan.destroy();
+      res.status(200).json({ message: 'Предмет успешно удален из учебного плана' });
+  } catch (err) {
+      console.error('Ошибка при удалении предмета:', err);
+      res.status(500).json({ message: 'Ошибка сервера' });
   }
 });
 
