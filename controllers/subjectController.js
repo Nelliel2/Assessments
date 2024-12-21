@@ -2,7 +2,7 @@
 // Функция для получения списка предметов
 async function fetchSubjects() {
     try {
-        const response = await fetch('http://localhost:3000/subjects');
+        const response = await fetch('http://localhost:3000/api/subjects');
         if (!response.ok) {
             throw new Error('Failed to fetch subjects');
         }
@@ -25,7 +25,7 @@ async function fetchSubjects() {
 async function getSubjectsList() {
 
     try {
-        const response = await fetch('http://localhost:3000/subjects');
+        const response = await fetch('http://localhost:3000/api/subjects');
         if (!response.ok) {
             throw new Error('Failed to fetch subjects');
         }
@@ -50,7 +50,7 @@ async function addSubject() {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/subjects', {
+        const response = await fetch('http://localhost:3000/api/subjects', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ async function addSubject() {
 // Функция для удаления предмета
 async function deleteSubject(id) {
     try {
-        const response = await fetch(`http://localhost:3000/subjects/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/subjects/${id}`, {
             method: 'DELETE',
         });
 
@@ -96,7 +96,7 @@ async function updateSubject(id) {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/subjects/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/subjects/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

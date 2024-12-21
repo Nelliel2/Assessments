@@ -8,7 +8,7 @@ async function addUser(Email, Password, StudentId, TeacherId) {
   }
 
   try {
-    const response = await fetch('http://localhost:3000/users', {
+    const response = await fetch('http://localhost:3000/api/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ async function updateUser(id) {
   }
 
   try {
-    const response = await fetch(`http://localhost:3000/users/${id}`, {
+    const response = await fetch(`http://localhost:3000/api/users/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -64,7 +64,7 @@ async function updateUser(id) {
 // Функция для получения списка пользователей
 async function getUsers() {
   try {
-    const response = await fetch('http://localhost:3000/users');
+    const response = await fetch('http://localhost:3000/api/users');
     const users = await response.json();
 
     const userList = document.getElementById('userList');
@@ -84,7 +84,7 @@ async function getUsers() {
 // Функция для получения пользователя по ID
 async function getUserById(id) {
   try {
-    const response = await fetch(`http://localhost:3000/users/${id}`);
+    const response = await fetch(`http://localhost:3000/api/users/${id}`);
     const user = await response.json();
     console.log(user);
   } catch (err) {
@@ -95,7 +95,7 @@ async function getUserById(id) {
 
 async function loginUser(email, password) {
   try {
-    const response = await fetch('http://localhost:3000/login', {
+    const response = await fetch('http://localhost:3000/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ Email: email, Password: password }),

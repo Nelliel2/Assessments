@@ -3,7 +3,7 @@ const token = localStorage.getItem('token');
 // Функция для получения списка предметов
 async function fetchGroups() {
     try {
-        const response = await fetch('http://localhost:3000/groups');
+        const response = await fetch('http://localhost:3000/api/groups');
         if (!response.ok) {
             throw new Error('Failed to fetch groups');
         }
@@ -33,7 +33,7 @@ async function addGroup() {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/groups', {
+        const response = await fetch('http://localhost:3000/api/groups', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -55,7 +55,7 @@ async function addGroup() {
 // Функция для удаления предмета
 async function deleteGroup(id) {
     try {
-        const response = await fetch(`http://localhost:3000/groups/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/groups/${id}`, {
             method: 'DELETE',
         });
 
@@ -79,7 +79,7 @@ async function updateGroup(id) {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/groups/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/groups/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -101,7 +101,7 @@ async function updateGroup(id) {
 
 async function fetchGroupById(groupId) {
     try {
-        const response = await fetch(`http://localhost:3000/groups/${groupId}`, {
+        const response = await fetch(`http://localhost:3000/api/groups/${groupId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}` // 🟢 Отправляем токен в заголовке
@@ -123,7 +123,7 @@ async function fetchGroupById(groupId) {
 
 async function getSubjectsByGroupId(groupId) {
     try {
-        const response = await fetch(`http://localhost:3000/group/${groupId}/subjects`, {
+        const response = await fetch(`http://localhost:3000/api/group/${groupId}/subjects`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ async function getSubjectsByGroupId(groupId) {
 
 async function getGroupsBySubjectId(id) {
     try {
-        const response = await fetch(`http://localhost:3000/subject/${id}/groups`, {
+        const response = await fetch(`http://localhost:3000/api/subject/${id}/groups`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

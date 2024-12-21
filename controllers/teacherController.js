@@ -25,7 +25,7 @@ async function fetchTeachers() {
 // Функция для получения списка предметов преподавателя
 async function getTeacherSubjects(id) {
     try {
-        const response = await fetch(`http://localhost:3000/teacher/${id}/subjects`, {
+        const response = await fetch(`http://localhost:3000/api/teacher/${id}/subjects`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ async function addTeacher(Name, Surname, Patronymic) {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/teachers', {
+        const response = await fetch('http://localhost:3000/api/teachers', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -93,7 +93,7 @@ async function addTeacher(Name, Surname, Patronymic) {
 // Функция для удаления преподавателя
 async function deleteTeacher(id) {
     try {
-        const response = await fetch(`http://localhost:3000/teachers/${id}`, { // Исправлен синтаксис URL
+        const response = await fetch(`http://localhost:3000/api/teachers/${id}`, { // Исправлен синтаксис URL
             method: 'DELETE',
         });
 
@@ -120,7 +120,7 @@ async function updateTeacher(id) {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/teachers/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/teachers/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

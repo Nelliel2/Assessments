@@ -120,7 +120,6 @@ async function fetchAssessmentsByStudent(studentId) {
         }
         const assessments = await response.json();
         
-        // Здесь можно обработать оценки, например, вывести их в таблицу на странице
         console.log(`Assessments for student ${studentId}:`, assessments);
     } catch (err) {
         console.error(err);
@@ -136,7 +135,6 @@ async function fetchAssessmentsBySubject(subjectId) {
         }
         const assessments = await response.json();
         
-        // Здесь можно обработать оценки, например, вывести их в таблицу на странице
         console.log(`Assessments for subject ${subjectId}:`, assessments);
     } catch (err) {
         console.error(err);

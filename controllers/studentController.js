@@ -27,7 +27,7 @@ async function fetchStudents() {
 // Функция для получения студента по id 
 async function getStudentById(id) {
     try {
-        const response = await fetch(`http://localhost:3000/student/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/student/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ async function addStudent(Name, Surname, Patronymic, GroupId) {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/students', {
+        const response = await fetch('http://localhost:3000/api/students', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -100,7 +100,7 @@ async function addStudent(Name, Surname, Patronymic, GroupId) {
 // Функция для удаления студента
 async function deleteStudent(id) {
     try {
-        const response = await fetch(`http://localhost:3000/students/${id}`, { // Исправлен синтаксис URL
+        const response = await fetch(`http://localhost:3000/api/students/${id}`, { // Исправлен синтаксис URL
             method: 'DELETE',
         });
 
@@ -127,7 +127,7 @@ async function updateStudent(id) {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/students/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/students/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -150,7 +150,7 @@ async function updateStudent(id) {
 // Функция для получения списка студентов
 async function fetchStudentsByGroup(groupId) {
     try {
-        const response = await fetch(`http://localhost:3000/students/group/${groupId}`); // Используем groupId в URL
+        const response = await fetch(`http://localhost:3000/api/students/group/${groupId}`); // Используем groupId в URL
         if (!response.ok) {
             throw new Error('Failed to fetch students');
         }
