@@ -10,30 +10,13 @@
 
 <body>
     <div data-id="posts"></div>
-    <header class="header">
-        <div class="header-content">
-            <div class="site-name">
-                <h2>Оценки</h2>
-            </div>
-            <nav class="menu">
-                <ul class="header-menu">
-                    <li class="main-menu-element">
-                        <a href="index">Информация</a>
-                    </li>
-                    <li class="main-menu-element">
-                        <a href="registration">Регистрация</a>
-                    </li>
-                    <li>
-                        |
-                    </li>
-                    <li class="main-menu-element main-menu-element-enter">
-                        <a href="login">Войти</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
+    <% if (!token) { %>
+        <%- include('partials/header') %> 
+      <% } else { %>
+        <%- include('partials/headerAuthorized') %>     
+        <script src="/information.js" type="module"></script>
+    <% } %>
+      
     <div class="body">
         <div class="assessments-header">
             <h1>Важная информация</h1>
@@ -43,6 +26,7 @@
             <a href="/api-docs" class="swagger">Документация к API</a>
         </div>
     </div>
+    
 </body>
 
 </html>

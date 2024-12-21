@@ -238,6 +238,7 @@ router.post('/login', async (req, res) => {
     );
 
     req.session.role = role;
+    req.session.token = token;
     res.status(200).json({
       message: 'Успешный вход.',
       token,
@@ -396,5 +397,9 @@ router.delete('/users/:id', async (req, res) => {
     res.status(500).send(err.message); // Обработка ошибки сервера
   }
 });
+
+
+
+
 
 export default router;

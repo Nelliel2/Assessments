@@ -17,29 +17,8 @@
 <body>
     <div data-id="posts"></div>
 
-    <header class="header">
-        <div class="header-content">
-            <div class="site-name">
-                <h2>Оценки</h2>
-            </div>
-            <nav class="menu">
-                <ul class="header-menu">
-                    <li class="main-menu-element">
-                        <a href="assessmentsJournal" id="assessments-menu-button">Оценки</a>
-                    </li>
-                    <li class="main-menu-element">
-                        <a href="profile" id="profile-menu-button">Мой профиль</a>
-                    </li>
-                    <li>
-                        |
-                    </li>
-                    <li class="main-menu-element main-menu-element-enter">
-                        <a href="login" id="logout-menu-button">Выйти</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <%- include('partials/headerAuthorized') %>
+    
     <div class="assessments body">
         <div class="assessments-header">
             <div class="curr-subject">

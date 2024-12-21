@@ -5,6 +5,7 @@ import {Student, Teacher } from './models/internal.js';
 import session from 'express-session';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import setupSwagger from './swagger.js';
 
 
 import { authenticateToken } from './middleware/auth.js';
@@ -50,7 +51,7 @@ app.set('views', path.join(__dirname, 'views')); // Устанавливаем �
 
 // Отдаём HTML-файл по запросу
 app.get('/', (req, res) => {
-  res.render(path.join(__dirname, 'views', 'index')); // Путь к файлу
+  res.render(path.join(__dirname, 'views', 'index'), { token: req.session.token }); // Путь к файлу
 });
 
 app.use(bodyParser.json());
@@ -65,13 +66,22 @@ app.get('/assessmentsJournal', (req, res) => {
 });
 
 app.get('/index', (req, res) => {
-  res.render('index'); 
+  res.render('index', { token: req.session.token } ); 
 });
 
 app.get('/login', (req, res) => {
   res.render('login'); 
 });
 
+app.post('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Ошибка выхода' });
+    }
+    res.clearCookie('connect.sid');  // Удаляем куки сессии
+    res.json({ message: 'Выход выполнен' });
+  });
+});
 
 app.get('/registration', (req, res) => {
   res.render('registration'); 
@@ -158,6 +168,40 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'Документация API для системы учёта оценок',
     },
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        BearerAuth: [],
+      },
+    ],
+    paths: {
+      '/api/users': {
+        get: {
+          summary: 'Получить список пользователей',
+          security: [
+            {
+              BearerAuth: [],
+            },
+          ],
+          responses: {
+            200: {
+              description: 'Успешный запрос',
+            },
+            401: {
+              description: 'Неавторизованный',
+            },
+          },
+        },
+      },
+    },
     servers: [
       {
         url: 'http://localhost:3000/api',
@@ -171,7 +215,7 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-
+setupSwagger(app); 
 
 // Запуск сервера
 app.listen(port, async () => {

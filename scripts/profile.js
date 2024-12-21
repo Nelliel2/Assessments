@@ -148,9 +148,18 @@ getUserProfile();
 document.addEventListener("DOMContentLoaded", ready);
 
 async function ready() {
-    document.getElementById('logout-menu-button').addEventListener('click', () => {
-        localStorage.removeItem('token'); // Удаляем токен
-        window.location.href = '/login'; // Перенаправляем на страницу входа
+    document.getElementById('logout-menu-button').addEventListener('click', async () => {
+        const response = await fetch('/logout', {
+            method: 'POST',
+          });
+          if (response.ok) {
+            localStorage.removeItem('token'); // Удаляем токен
+            localStorage.clear();
+            req.session.destroy();
+            window.location.href = '/login'; // Перенаправляем на страницу входа
+          } else {
+            alert('Ошибка при выходе');
+          }
     });
 
     if (document.getElementById('Subject')) {
