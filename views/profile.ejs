@@ -56,18 +56,18 @@
                 <section class="tab-content">
                     <form action="" class="form" id="change-sequrety-form">
                         <h4>Изменить email</h4>
-                        <label for="Email">Email</label>
-                        <input type="email" id="Email" placeholder="Введите новый email">
+                        <label for="Email">Email<span class="required">*</span></label>
+                        <input type="email" id="Email" placeholder="Введите новый email" required>
 
                         <h4>Изменить пароль</h4>
                         <label for="Password">Пароль<span class="required">*</span></label>
                         <input type="password" id="Password-old" placeholder="Введите пароль" required>
 
-                        <label for="Password">Новый пароль</label>
-                        <input type="password" id="Password" placeholder="Введите новый пароль">
+                        <label for="Password">Новый пароль<span class="required">*</span></label>
+                        <input type="password" id="Password" placeholder="Введите новый пароль" required>
 
-                        <label for="Password">Повторите пароль</label>
-                        <input type="password" id="Password-repead" placeholder="Повторите пароль">
+                        <label for="Password">Повторите пароль<span class="required">*</span></label>
+                        <input type="password" id="Password-repead" placeholder="Повторите пароль" required>
 
 
                         <button type="submit" class="button" id="change-sequrety-button">Изменить</button>
@@ -101,6 +101,31 @@
                     </form>
                 </section>
             </div>
+            <% if (role !=='Student' ) { %>
+                <div class="tab">
+                    <input type="radio" id="tab3" name="tab-group">
+                    <label for="tab3" class="tab-title"><span class="tab-title-text">Предметы</span></label>
+                    <section class="tab-content">
+                        <form action="" class="form" id="change-subject-form">
+                            <h4>Текущие предметы</h4>
+
+                            <h4>Добавить предметы</h4>
+                            <div class="group-container" id="group-container">
+                                <label for="group-name-choice">Группа<span class="required">*</span></label>
+                                <select name="group" id="group-name-choice" class="group select-box" required>
+                                    <option value="" disabled selected class="disabled-selection" hidden>Выберите вашу
+                                        группу</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="button" id="change-name-button">Добавить</button>
+                            <hr>
+                            <div class="container signin">
+                                <p>По всем вопросам обращайтесь на почту: aaa@mail.ru</p>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            <% } %>
         </div>
     </div>
 </body>

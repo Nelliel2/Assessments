@@ -92,9 +92,27 @@ h4 {
     display: block;
 }
 
-@media (max-width: 500px){
+.subject {
+    width: min-content;
+    padding: 5px 10px;
+    background-color: #609BFF;
+    color: white;
+    border-radius: 30px;
+}
+
+
+
+@media (max-width: 780px){
     .tab-title {
+        padding: 11px 11px;
         width: 100%;
+    }  
+}
+
+
+@media (max-width: 500px){
+    .tabs {
+        justify-content: space-between;
     }
     
 }

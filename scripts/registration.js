@@ -108,7 +108,7 @@ const checkEmail = async function (input) {
     return;
   }
   try {
-    const response = await fetch('http://localhost:3000/check-email', {
+    const response = await fetch('http://localhost:3000/api/check-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ Email: email })

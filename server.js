@@ -1,8 +1,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { sequelize } from './db_connection.js';
-import { Group, Assessment, Student, User, Teacher, Subject, StudyPlan } from './models/internal.js';
+import {Student, Teacher } from './models/internal.js';
 import session from 'express-session';
+import swaggerJsDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 
 import { authenticateToken } from './middleware/auth.js';
@@ -76,10 +78,14 @@ app.get('/registration', (req, res) => {
 });
 
 app.get('/profile', (req, res) => {
-  res.render('profile'); 
+  const role = req.session.role; // Получаем роль из сессии
+  if (!role) {
+    return res.status(403).json({ message: 'Access denied. No role found in session.' });
+  }
+  res.render('profile', { role }); // Передаём роль в шаблон
 });
 
-app.get('/setDataToToken', authenticateToken, async (req, res) => {
+app.get('/api/setDataToToken', authenticateToken, async (req, res) => {
   try {
     console.log('Данные пользователя из токена:', req.user); // Выводим все, что есть в req.user
 
@@ -142,6 +148,30 @@ app.get('/sse', (req, res) => {
     res.end();
   });
 });
+
+// Конфигурация Swagger
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API для работы с оценками',
+      version: '1.0.0',
+      description: 'Документация API для системы учёта оценок',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000/api',
+        description: 'Dev server',
+      },
+    ],
+  },
+  apis: ['./routes/*.js'], // Пути к файлам с API
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+
 
 // Запуск сервера
 app.listen(port, async () => {

@@ -26,7 +26,7 @@ if (!token) {
 
 async function getUserProfile() {
     try {
-        const response = await fetch('http://localhost:3000/setDataToToken', {
+        const response = await fetch('http://localhost:3000/api/setDataToToken', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -62,7 +62,12 @@ async function getUserProfile() {
 
             document.getElementById('FullName').textContent = `${teacher.Surname} ${teacher.Name} ${teacher.Patronymic}`;
             const subjects = await teacherController.getTeacherSubjects(teacher.id);
-            document.getElementById('SubjectsName').textContent = `Предметы: ${subjects.map((subject) => subject.name).join(', ')}`;
+            const subjectsArray = subjects.map((subject) => subject.name);
+            subjects.forEach(subject => {
+                console.log(subject.name);
+            });
+            document.getElementById('SubjectsName');
+
             document.getElementById('Name').value = `${teacher.Name}`;
             document.getElementById('Surname').value = `${teacher.Surname}`;
             document.getElementById('Patronymic').value = `${teacher.Patronymic}`;
@@ -100,7 +105,7 @@ const checkEmail = async function (input) {
         return;
     }
     try {
-        const response = await fetch('http://localhost:3000/check-email', {
+        const response = await fetch('http://localhost:3000/api/check-email', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ Email: email })
@@ -150,7 +155,7 @@ const checkPassword = async function (input) {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/check-password/${localStorage.getItem("userId")}`, {
+        const response = await fetch(`http://localhost:3000/api/check-password/${localStorage.getItem("userId")}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ Password: password })
