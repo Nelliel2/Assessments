@@ -128,10 +128,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const buttonTwo = document.getElementById('assessment-two');
         buttonTwo.addEventListener('click', () => newAssessment(2));
 
-        document.querySelector("#group-name-choice").addEventListener('change', function (e) {
+        document.querySelector("#group-name-choice").addEventListener('change', async function (e) {
             clearTableContent();
     
-            studentController.fetchStudentsByGroup(e.target.value);
+            await studentController.fetchStudentsByGroup(e.target.value);
 
         })
 
@@ -139,11 +139,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             updateAssessmentTable();
         })
-        document.querySelector("#subject-name-choice").addEventListener('change', function (e) {
+        document.querySelector("#subject-name-choice").addEventListener('change', async function (e) {
             clearTableContent();
 
-            groupController.getGroupsBySubjectId(e.target.value);
-            studentController.fetchStudentsByGroup(e.target.value);
+            await groupController.getGroupsBySubjectId(e.target.value);
+            
+            let groupId = document.getElementById("group-name-choice").value;
+            await studentController.fetchStudentsByGroup(groupId);
 
             if (document.querySelector("#student-name-choice").value) {
                 updateAssessmentTable(); 
