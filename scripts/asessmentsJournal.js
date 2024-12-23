@@ -152,6 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
 
+    } else if (localStorage.getItem("userRole") === "Student") {
+        document.querySelector("#subject-name-choice").addEventListener('change', async function (e) {
+            clearTableContent();
+            if (document.getElementById("group-name-choice").value && document.querySelector("#student-name-choice").value) {
+                updateAssessmentTable(); 
+            }
+        })
+    
     }
 });
 

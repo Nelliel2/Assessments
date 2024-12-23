@@ -8,7 +8,7 @@ async function fetchAssessments() {
             throw new Error('Failed to fetch assessments');
         }
         const assessments = await response.json();
-        
+
         // Здесь можно обработать оценки, например, вывести их в таблицу на странице
         console.log('Assessments:', assessments);
     } catch (err) {
@@ -30,11 +30,11 @@ async function addAssessment(studentId, subjectId, assessmentValue, date) {
                 'Content-Type': 'application/json'
             },
             // Исправлено: StudentId и SubjectId с заглавной буквы
-            body: JSON.stringify({ 
-                StudentId: studentId, 
-                SubjectId: subjectId, 
-                Assessment: assessmentValue, 
-                Date: date 
+            body: JSON.stringify({
+                StudentId: studentId,
+                SubjectId: subjectId,
+                Assessment: assessmentValue,
+                Date: date
             })
         });
 
@@ -64,12 +64,12 @@ async function deleteAssessment(id) {
 
         let startDate = document.getElementById("start-period").value;
         let endDate = document.getElementById("end-period").value;
-    
-        let studentId =  document.getElementById("student-name-choice").value;
-        let subjectId =  document.getElementById("subject-name-choice").value;
-        
+
+        let studentId = document.getElementById("student-name-choice").value;
+        let subjectId = document.getElementById("subject-name-choice").value;
+
         fetchAssessmentsByStudentAndSubject(studentId, subjectId, startDate, endDate, 'asc');
-    
+
     } catch (err) {
         console.error(err);
         alert('Error deleting assessment');
@@ -119,7 +119,7 @@ async function fetchAssessmentsByStudent(studentId) {
             throw new Error('Failed to fetch assessments for student');
         }
         const assessments = await response.json();
-        
+
         console.log(`Assessments for student ${studentId}:`, assessments);
     } catch (err) {
         console.error(err);
@@ -134,7 +134,7 @@ async function fetchAssessmentsBySubject(subjectId) {
             throw new Error('Failed to fetch assessments for subject');
         }
         const assessments = await response.json();
-        
+
         console.log(`Assessments for subject ${subjectId}:`, assessments);
     } catch (err) {
         console.error(err);
@@ -163,7 +163,7 @@ async function fetchAssessmentsByStudentAndSubject(studentId, subjectId, from = 
         if (sort) params.append('sort', sort);
 
         const response = await fetch(`http://localhost:3000/api/assessments/student/${studentId}/subject/${subjectId}?${params}`);
-        
+
         if (!response.ok) {
             if (response.status === 404) {
                 alert('Оценки для этого ученика по этому предмету не найдены');
@@ -172,15 +172,15 @@ async function fetchAssessmentsByStudentAndSubject(studentId, subjectId, from = 
             }
             return;
         }
-        
+
         const assessments = await response.json();
         let container = document.getElementById("assessments-container");
         container.innerHTML = "";
-        
+
         console.log('Оценка:', assessments);
         let assessmentColorsClass = [undefined, undefined, "assessment-two", "assessment-three", "assessment-four", "assessment-five"];
         let sum = 0;
-        
+
         assessments.forEach(assessment => {
             let row = document.createElement("div");
             row.classList.add("assessments-content", "assessments-row");
@@ -191,14 +191,14 @@ async function fetchAssessmentsByStudentAndSubject(studentId, subjectId, from = 
             deleteButton.addEventListener('click', (event) => {
                 deleteAssessment(assessment.id); // Вызываем функцию удаления
             });
-        
+
             let dateElementDiv = document.createElement("div");
             dateElementDiv.classList.add("assessments-content-element");
             let dateDiv = document.createElement("div");
             dateDiv.classList.add("assessments-date");
             dateDiv.textContent = new Date(assessment.Date).toLocaleDateString("ru");;
             dateElementDiv.appendChild(dateDiv);
-        
+
             let assessmentElementDiv = document.createElement("div");
             assessmentElementDiv.classList.add("assessments-content-element");
             let assessmentDiv = document.createElement("div");
@@ -208,21 +208,26 @@ async function fetchAssessmentsByStudentAndSubject(studentId, subjectId, from = 
 
             sum += assessment.Assessment;
 
-            row.appendChild(deleteButton);
-            row.appendChild(dateElementDiv);
+            if (localStorage.getItem("userRole") === "Teacher") {
+                row.appendChild(deleteButton);
+            } else {
+                dateElementDiv.style.marginLeft = "35px";
+            }
+                 
+            row.appendChild(dateElementDiv);     
             row.appendChild(assessmentElementDiv);
 
             container.appendChild(row);
         });
 
-        
-        let avg = assessments.length !=0 ? (sum / assessments.length).toFixed(2) : '';
+
+        let avg = assessments.length != 0 ? (sum / assessments.length).toFixed(2) : '';
         if (avg) {
             avgText.textContent = "Средняя оценка за период: ";
             avgAssessment.textContent = avg;
             avgAssessment.classList.value = '';
             avgAssessment.classList.add("assessments-assessment", assessmentColorsClass[Math.round(avg)]);
-        }     
+        }
 
         //Прокрутка скролла таблицы до конца
         let panel = document.getElementById("assessments-assessment-panel");
